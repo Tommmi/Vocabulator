@@ -1,0 +1,107 @@
+Eine deutsche Vokabel kann ja auf Englisch unterschiedliche Übersetzungen haben.
+Die verschiedenen Übersetzungen könnten eventuell einfach nur alternative Übersetzungen sein oder auch etwas ganz anderes bedeuten.
+Es ist also manchmal entscheidend für die korrekte Übersetzung den Bedeutungskontext der Vokabel zu kennen.
+Liefere dem Nutzer für den unten angegebenen deutschen Begriff mögliche englische Übersetzungen.
+Gruppiere die Übersetzungen nach Bedeutungskontext. 
+Der Bedeutungskontext soll nach Möglichkeit nur mit einem einzigen deutschen Wort ausgedrückt werden.
+Innerhalb eines Bedeutungskontextes dürfen, falls vorhanden, verschiedene englische Übersetzungsalternativen erscheinen.
+Außerdem liefere mir für jeden Bedeutungskontext auf deutsch drei möglichst kurze Sätze mit den englischen Übersetzungen. Bevorzuge das Präsenz, falls möglich.
+Deine Antwort soll nur aus einer json-Struktur bestehen:
+Beispiel:
+{
+	"word":"wollen"
+	"contexts":[
+		{
+			"context":"Absicht",
+			"translations": [
+				"want (to)", 
+				"would like (to)"
+			],
+			"examples": [
+				{
+					"german":"Ich will ein Eis.",
+					"english":"I want an ice cream"
+				},
+				{
+					"german":"Sie will nach Hause gehen.",
+					"english":"She wants to go home."
+				},
+				{
+					"german":"Willst du mitkommen?",
+					"english":"Do you want to come along?"
+				}
+			]
+		},
+		{
+			"context":"Wunsch (höflich oder indirekt)",
+			"translations": [
+				"would like (to)", 
+				"wish (to)"
+			],
+			"examples": [
+				{
+					"german":"Ich würde das nicht wollen.",
+					"english": "I wouldn't want that."
+				},
+				{
+					"german":"Er will nicht stören.",
+					"english":"He would rather not disturb."
+				},
+				{
+					"german":"Sie will lieber allein sein.",
+					"english":"She would like to be alone."
+				}
+			]
+		},
+		{
+			"context":"Entschlossenheit",
+			"translations": [
+				"be determined (to)", 
+				"insist (on)"
+			],
+			"examples": [
+				{
+					"german":"Ich will das schaffen.",
+					"english":"I am determined to make it."
+				},
+				{
+					"german":"Er will unbedingt gewinnen.",
+					"english":"He insists on winning."
+				},
+				{
+					"german":"Sie will ihren eigenen Weg gehen.",
+					"english":"She is determined to go her own way."
+				}
+			]
+		},
+		{
+			"context":"Behauptung (angeblich)",
+			"translations": [
+				"claim (to)", 
+				"say (that one...)",
+				"be said to"
+			],
+			"examples": [
+				{
+					"german":"Er will den Täter gesehen haben.",
+					"english":"He claims to have seen the perpetrator."
+				},
+				{
+					"german":"Sie will davon nichts gewusst haben.",
+					"english":"She says she didn’t know about it."
+				},
+				{
+					"german":"Der Zeuge will alles gehört haben.",
+					"english":"The witness claims to have heard everything"
+				}
+			]
+		}
+	]
+}
+
+
+Benutze ebenfalls die Einrückungen. Ich möchte beim Kopieren der Antwort nicht, dass '['-Zeichen mit einem '\' escaped werden !!
+
+Der deutsche begriff lautet:
+
+aufgeben
