@@ -3,15 +3,17 @@ using Vocabulator.Domain.Services.QuestionTypes.GermanWord;
 
 namespace Vocabulator.Domain.Services;
 
-public abstract class ProcessorBase<TResponse> where TResponse : class
+public abstract class ProcessorBase<TResponse,TQuestionType> 
+    where TResponse : class 
+    where TQuestionType: Question
 {
     private readonly IAiEngineFactory _aiEngineFactory;
-    protected readonly AiQuestionProcessor<TResponse, Processor4GermanWord.QuestionType> _aiProcessor;
+    protected readonly AiQuestionProcessor<TResponse, TQuestionType> _aiProcessor;
 
     protected ProcessorBase(IAiEngineFactory aiEngineFactory, string questionFilePath, string className)
     {
         _aiEngineFactory = aiEngineFactory;
-        _aiProcessor = new AiQuestionProcessor<TResponse, Processor4GermanWord.QuestionType>(
+        _aiProcessor = new AiQuestionProcessor<TResponse, TQuestionType>(
             templateName: className,
             template: GetTemplate(questionFilePath).Result!,
             aiEngineCreator: CreateAiEngineFunc);

@@ -6,6 +6,7 @@ using CommandLine;
 using Microsoft.Extensions.Configuration;
 using Vocabulator;
 using Vocabulator.Common;
+using Vocabulator.Domain.Services.QuestionTypes.EnglishWord;
 using Vocabulator.Domain.Services.QuestionTypes.GermanWord;
 using Vocabulator.OpenAi;
 
@@ -27,9 +28,10 @@ namespace OpenAiConsoleApp
         private static async Task Process(Options options, Config config)
         {
             var openAiFactory = new AiEngineFactory(openApiKey: config.ApiKey);
-            var processorGermanWord = new Processor4GermanWord(openAiFactory, questionFilePath: options.QuestionFilePath);
+            var processorGermanWord = new Processor4GermanWord(openAiFactory, questionFilePath: options.QuestionGermanWordFilePath);
+            var processorEnglishWord = new Processor4EnglishWord(openAiFactory, questionFilePath: options.QuestionEnglishWordFilePath);
 
-            RootObject? answerJson = await processorGermanWord.LoadAnswer(germanWord: "abholen");
+            RootObject? answerJson = await processorGermanWord.LoadAnswer(germanWord: "aufgeben");
 
             if (answerJson != null) 
             {

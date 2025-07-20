@@ -7,7 +7,7 @@ using Vocabulator.Common;
 
 namespace Vocabulator.Domain.Services.QuestionTypes.GermanWord
 {
-    public class Processor4GermanWord : ProcessorBase<RootObject>
+    public class Processor4GermanWord : GermanOrEnglishWordBase<Processor4GermanWord.QuestionType>
     {
         public class QuestionType : Question
         {
@@ -34,7 +34,7 @@ namespace Vocabulator.Domain.Services.QuestionTypes.GermanWord
         public async Task<RootObject?> LoadAnswer(string germanWord)
         {
             var question = new QuestionType(_aiProcessor.QuestionTemplate, germanWord: germanWord);
-            return await _aiProcessor.DoRequest(question);
+            return await base.DoRequest(question);
         }
     }
 }

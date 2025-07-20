@@ -4,6 +4,8 @@ namespace OpenAiConsoleApp;
 
 internal class Options
 {
-    [Option('f', "file", Required = false, HelpText = "path to question file", Default = ".\\question.txt")]
-    public string QuestionFilePath { get; set; }
+    [Option('a', "questionGermanWordFilePath", Required = false, HelpText = "questionGermanWordFilePath", Default = ".\\questionGermanWordFilePath.txt")]
+    public string QuestionGermanWordFilePath { get; set; }
+    [Option('b', "questionEnglishWordFilePath", Required = false, HelpText = "questionEnglishWordFilePath", Default = ".\\questionEnglishWordFilePath.txt")]
+    public string QuestionEnglishWordFilePath { get; set; }
 }

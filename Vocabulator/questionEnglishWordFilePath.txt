@@ -1,0 +1,86 @@
+Eine englische Vokabel kann ja auf Deutsch unterschiedliche Übersetzungen haben.
+Die verschiedenen Übersetzungen könnten eventuell einfach nur alternative Übersetzungen sein oder auch etwas ganz anderes bedeuten.
+Es ist also manchmal entscheidend für die korrekte Übersetzung den Bedeutungskontext der Vokabel zu kennen.
+Liefere dem Nutzer für den unten angegebenen englischen Begriff mögliche deutsche Übersetzungen.
+Gruppiere die Übersetzungen nach Bedeutungskontext. 
+Der Bedeutungskontext soll nach Möglichkeit nur mit einem einzigen deutschen Wort ausgedrückt werden.
+Innerhalb eines Bedeutungskontextes dürfen, falls vorhanden, verschiedene deutsche Übersetzungsalternativen erscheinen.
+Außerdem liefere mir für jeden Bedeutungskontext auf englisch drei möglichst kurze Sätze mit den deutschen Übersetzungen. Bevorzuge das Präsenz, falls möglich.
+Deine Antwort soll nur aus einer json-Struktur bestehen:
+Beispiel:
+{
+	"word":"to want"
+	"contexts":[
+		{
+			"context":"Wunsch",
+			"translations": [
+				"wollen", 
+				"möchten", 
+				"sich wünschen"
+			],
+			"examples": [
+				{
+					"english":"I want a new phone.",
+					"german":"Ich möchte ein Telefon."
+				},
+				{
+					"english":"Do you want coffee?",
+					"german":"Möchtest Du Kaffee?"
+				},
+				{
+					"english":"She wants to travel.",
+					"german":"Sie möchte reisen"
+				}
+			]
+		},
+		{
+			"context":"Bedarf",
+			"translations": [
+				"benötigen", 
+				"brauchen"
+			],
+			"examples": [
+				{
+					"english":"We want more staff.",
+					"german":"Wir brauchen mehr Personal."
+				},
+				{
+					"english":"The car wants repair.",
+					"german":"Das Auto muss repariert werden."
+				},
+				{
+					"english":"You want rest.",
+					"german":"Du brauchst Ruhe."
+				}
+			]
+		},
+		{
+			"context":"Fahndung",
+			"translations": [
+				"gesucht werden", 
+				"per Haftbefehl gesucht sein"
+			],
+			"examples": [
+				{
+					"english":"He is wanted by the police.",
+					"german":"Er wird von der Polizei gesucht."
+				},
+				{
+					"english":"She's wanted for theft.",
+					"german":"Sie wird wegen Diebstahls gesucht."
+				},
+				{
+					"english":"The suspect is wanted in three countries.",
+					"german":"Der Verdächtige wird in drei Ländern gesucht."
+				}
+			]
+		}
+	]
+}
+
+
+Benutze ebenfalls die Einrückungen. Ich möchte beim Kopieren der Antwort nicht, dass '['-Zeichen mit einem '\' escaped werden !!
+
+Der englische Begriff lautet:
+
+PARAM(WORD)PARAM
