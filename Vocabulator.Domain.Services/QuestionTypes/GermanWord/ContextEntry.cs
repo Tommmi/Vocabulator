@@ -1,4 +1,4 @@
-﻿namespace OpenAiConsoleApp;
+﻿namespace Vocabulator.Domain.Services.QuestionTypes.GermanWord;
 
 public class ContextEntry
 {

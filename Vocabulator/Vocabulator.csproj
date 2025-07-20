@@ -26,4 +26,10 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.7" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Vocabulator.Common\Vocabulator.Common.csproj" />
+    <ProjectReference Include="..\Vocabulator.Domain.Services\Vocabulator.Domain.Services.csproj" />
+    <ProjectReference Include="..\Vocabulator.OpenAi\Vocabulator.OpenAi.csproj" />
+  </ItemGroup>
+
 </Project>

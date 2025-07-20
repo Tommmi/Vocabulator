@@ -104,4 +104,4 @@ Benutze ebenfalls die Einrückungen. Ich möchte beim Kopieren der Antwort nicht, 
 
 Der deutsche begriff lautet:
 
-aufgeben
+PARAM(WORD)PARAM

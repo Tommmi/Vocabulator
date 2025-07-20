@@ -5,6 +5,9 @@ using System.Text.Json;
 using CommandLine;
 using Microsoft.Extensions.Configuration;
 using Vocabulator;
+using Vocabulator.Common;
+using Vocabulator.Domain.Services.QuestionTypes.GermanWord;
+using Vocabulator.OpenAi;
 
 namespace OpenAiConsoleApp
 {
@@ -23,23 +26,14 @@ namespace OpenAiConsoleApp
 
         private static async Task Process(Options options, Config config)
         {
-            var inputText = await TryReadQuestion(options);
-            string apiKey = config.ApiKey;
+            var openAiFactory = new AiEngineFactory(openApiKey: config.ApiKey);
+            var processorGermanWord = new Processor4GermanWord(openAiFactory, questionFilePath: options.QuestionFilePath);
 
-            using var client = new HttpClient();
+            RootObject? answerJson = await processorGermanWord.LoadAnswer(germanWord: "abholen");
 
-            var responseString = await TryCallOpenAi(client, apiKey, inputText);
-
-            if(responseString != null) 
+            if (answerJson != null) 
             {
-                var resultText = GetResultText(responseString);
-
-                var answerJson = DeserializeJsonAnswer(ref resultText);
-
-
                 Console.WriteLine("----- Antwort von OpenAI -----");
-                Console.WriteLine(resultText);
-
                 WriteJsonAnswer(answerJson);
             }
         }
@@ -59,80 +53,6 @@ namespace OpenAiConsoleApp
                     Console.WriteLine($"  - {example.German} => {example.English}");
                 }
             }
-        }
-
-        private static RootObject? DeserializeJsonAnswer([AllowNull] ref string resultText)
-        {
-            resultText = ExtractJson(resultText);
-
-            var jsonOptions = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-
-            var answerJson = JsonSerializer.Deserialize<RootObject>(resultText, jsonOptions);
-            return answerJson;
-        }
-
-        private static async Task<string?> TryCallOpenAi(HttpClient client, string apiKey, string? inputText)
-        {
-            var content = CreateHttpStringContent(client, apiKey, inputText);
-
-            return await TryCallOpenAi(client, content);
-        }
-
-        private static string? GetResultText(string? responseString)
-        {
-            using var jsonDoc = JsonDocument.Parse(responseString);
-            var resultText = jsonDoc.RootElement
-                .GetProperty("choices")[0]
-                .GetProperty("message")
-                .GetProperty("content")
-                .GetString();
-            return resultText;
-        }
-
-        private static async Task<string?> TryCallOpenAi(HttpClient client, StringContent content)
-        {
-            HttpResponseMessage response;
-
-            try
-            {
-                response = await client.PostAsync("https://api.openai.com/v1/chat/completions", content);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Fehler bei der Anfrage: {ex.Message}");
-                return null;
-            }
-
-            string responseString = await response.Content.ReadAsStringAsync();
-
-            if (!response.IsSuccessStatusCode)
-            {
-                Console.WriteLine($"Fehler ({response.StatusCode}):");
-                Console.WriteLine(responseString);
-                return null;
-            }
-
-            return responseString;
-        }
-
-        private static StringContent CreateHttpStringContent(HttpClient client, string apiKey, string? inputText)
-        {
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
-
-            var requestBody = new
-            {
-                model = "gpt-4o",
-                messages = new[]
-                {
-                    new { role = "user", content = inputText }
-                }
-            };
-
-            var content = new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json");
-            return content;
         }
 
         private static Config ReadConfig()
@@ -157,35 +77,5 @@ namespace OpenAiConsoleApp
 
             return new Config(apiKey: apiKey);
         }
-
-        private static async Task<string?> TryReadQuestion(Options options)
-        {
-            string questionFilePath = options.QuestionFilePath;
-
-            if (!File.Exists(questionFilePath))
-            {
-                Console.WriteLine($"Datei nicht gefunden: {questionFilePath}");
-                return null;
-            }
-
-            // Inhalt lesen
-            string? inputText = await File.ReadAllTextAsync(questionFilePath);
-            return inputText;
-        }
-
-        static string ExtractJson(string input)
-        {
-            int endIndex = input.LastIndexOf('}');
-            if (endIndex == -1)
-                throw new FormatException("Keine schließende Klammer gefunden.");
-
-            int startIndex = input.IndexOf('{');
-            if (startIndex == -1 || startIndex >= endIndex)
-                throw new FormatException("Keine öffnende Klammer gefunden oder sie liegt hinter der letzten schließenden.");
-
-            return input.Substring(startIndex, endIndex - startIndex + 1);
-        }
-
-
     }
 }

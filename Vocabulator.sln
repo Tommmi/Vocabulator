@@ -1,9 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36310.24 d17.14
+VisualStudioVersion = 17.14.36310.24
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vocabulator", "Vocabulator\Vocabulator.csproj", "{1DF5E9C4-C6C8-4EDB-953A-002A6D14BF14}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vocabulator.Common", "Vocabulator.Common\Vocabulator.Common.csproj", "{EF551B71-E91B-45BE-B2F8-BC4EA8A4B38D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vocabulator.OpenAi", "Vocabulator.OpenAi\Vocabulator.OpenAi.csproj", "{9910AA1A-4867-4D06-8A11-7C43E94AB242}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vocabulator.Domain.Services", "Vocabulator.Domain.Services\Vocabulator.Domain.Services.csproj", "{AB76ADB6-5E3D-48FB-BF46-388638900E46}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{1DF5E9C4-C6C8-4EDB-953A-002A6D14BF14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1DF5E9C4-C6C8-4EDB-953A-002A6D14BF14}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1DF5E9C4-C6C8-4EDB-953A-002A6D14BF14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF551B71-E91B-45BE-B2F8-BC4EA8A4B38D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF551B71-E91B-45BE-B2F8-BC4EA8A4B38D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF551B71-E91B-45BE-B2F8-BC4EA8A4B38D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF551B71-E91B-45BE-B2F8-BC4EA8A4B38D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9910AA1A-4867-4D06-8A11-7C43E94AB242}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9910AA1A-4867-4D06-8A11-7C43E94AB242}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9910AA1A-4867-4D06-8A11-7C43E94AB242}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9910AA1A-4867-4D06-8A11-7C43E94AB242}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB76ADB6-5E3D-48FB-BF46-388638900E46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB76ADB6-5E3D-48FB-BF46-388638900E46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB76ADB6-5E3D-48FB-BF46-388638900E46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB76ADB6-5E3D-48FB-BF46-388638900E46}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
