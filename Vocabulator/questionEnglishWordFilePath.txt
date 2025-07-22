@@ -1,85 +1,156 @@
 Eine englische Vokabel kann ja auf Deutsch unterschiedliche Übersetzungen haben.
 Die verschiedenen Übersetzungen könnten eventuell einfach nur alternative Übersetzungen sein oder auch etwas ganz anderes bedeuten.
 Es ist also manchmal entscheidend für die korrekte Übersetzung den Bedeutungskontext der Vokabel zu kennen.
-Liefere dem Nutzer für den unten angegebenen englischen Begriff mögliche deutsche Übersetzungen.
-Gruppiere die Übersetzungen nach Bedeutungskontext. 
-Der Bedeutungskontext soll nach Möglichkeit nur mit einem einzigen deutschen Wort ausgedrückt werden.
-Innerhalb eines Bedeutungskontextes dürfen, falls vorhanden, verschiedene deutsche Übersetzungsalternativen erscheinen.
-Außerdem liefere mir für jeden Bedeutungskontext auf englisch drei möglichst kurze Sätze mit den deutschen Übersetzungen. Bevorzuge das Präsenz, falls möglich.
+Liefere mir für jeden möglichen Bedeutungskontext vier möglichst kurze englische Sätze (maximal 5 Wörter lang). 
+Verwende nach Möglichkeit das Präsenz.
+Übersetze die Beispielsätze ins Deutsche.
+Achte darauf, dass diese deutschen Übersetzungen auch wirklich korrekt sind und korrigiere sie gegebenenfalls oder bilde andere Sätze, 
+um sie zu ersetzen.
+Welche deutsche Vokabel ("A-Übersetzung") wurde in diesen Beispielen jeweils zur Übersetzung des englischen Begriffes verwendet?  
+Gruppiere die Beispielsätze jetzt nach Bedeutungskontext. 
+Drücke jeden Bedeutungskontext nach Möglichkeit mit einem treffenden englischen Begriff aus.
+Bilde für jeden Bedeutungskontext eine Liste der alternativen deutschen Übersetzungen ("translations"), 
+indem Du die zum Kontext gehörenden "A-Übersetzungen" auflistest.
+
 Deine Antwort soll nur aus einer json-Struktur bestehen:
 Beispiel:
 {
-	"word":"to want"
-	"contexts":[
-		{
-			"context":"Wunsch",
-			"translations": [
-				"wollen", 
-				"möchten", 
-				"sich wünschen"
-			],
-			"examples": [
-				{
-					"english":"I want a new phone.",
-					"german":"Ich möchte ein Telefon."
-				},
-				{
-					"english":"Do you want coffee?",
-					"german":"Möchtest Du Kaffee?"
-				},
-				{
-					"english":"She wants to travel.",
-					"german":"Sie möchte reisen"
-				}
-			]
-		},
-		{
-			"context":"Bedarf",
-			"translations": [
-				"benötigen", 
-				"brauchen"
-			],
-			"examples": [
-				{
-					"english":"We want more staff.",
-					"german":"Wir brauchen mehr Personal."
-				},
-				{
-					"english":"The car wants repair.",
-					"german":"Das Auto muss repariert werden."
-				},
-				{
-					"english":"You want rest.",
-					"german":"Du brauchst Ruhe."
-				}
-			]
-		},
-		{
-			"context":"Fahndung",
-			"translations": [
-				"gesucht werden", 
-				"per Haftbefehl gesucht sein"
-			],
-			"examples": [
-				{
-					"english":"He is wanted by the police.",
-					"german":"Er wird von der Polizei gesucht."
-				},
-				{
-					"english":"She's wanted for theft.",
-					"german":"Sie wird wegen Diebstahls gesucht."
-				},
-				{
-					"english":"The suspect is wanted in three countries.",
-					"german":"Der Verdächtige wird in drei Ländern gesucht."
-				}
-			]
-		}
-	]
+  "word": "to get",
+  "contexts": [
+    {
+      "context": "Receiving",
+      "translations": ["bekommen", "erhalten", "kriegen"],
+      "examples": [
+        {
+          "english": "I got a letter.",
+          "german": "Ich bekam einen Brief.",
+          "used_translation": "bekam"
+        },
+        {
+          "english": "She got a present.",
+          "german": "Sie erhielt ein Geschenk.",
+          "used_translation": "erhielt"
+        },
+        {
+          "english": "They got good news.",
+          "german": "Sie bekamen gute Nachrichten.",
+          "used_translation": "bekamen"
+        },
+        {
+          "english": "He got a promotion.",
+          "german": "Er kriegt eine Beförderung.",
+          "used_translation": "kriegt"
+        }
+      ]
+    },
+    {
+      "context": "Becoming",
+      "translations": ["werden"],
+      "examples": [
+        {
+          "english": "He got angry.",
+          "german": "Er wurde wütend.",
+          "used_translation": "wurde"
+        },
+        {
+          "english": "She got tired.",
+          "german": "Sie wurde müde.",
+          "used_translation": "wurde"
+        },
+        {
+          "english": "It gets dark early.",
+          "german": "Es wird früh dunkel.",
+          "used_translation": "wird"
+        },
+        {
+          "english": "We got cold.",
+          "german": "Uns wurde kalt.",
+          "used_translation": "wurde"
+        }
+      ]
+    },
+    {
+      "context": "Fetching/Obtaining",
+      "translations": ["holen", "besorgen", "bringen"],
+      "examples": [
+        {
+          "english": "I’ll get the book.",
+          "german": "Ich hole das Buch.",
+          "used_translation": "hole"
+        },
+        {
+          "english": "Can you get milk?",
+          "german": "Kannst du Milch besorgen?",
+          "used_translation": "besorgen"
+        },
+        {
+          "english": "She got some coffee.",
+          "german": "Sie holte etwas Kaffee.",
+          "used_translation": "holte"
+        },
+        {
+          "english": "Get me my coat.",
+          "german": "Hol mir meinen Mantel.",
+          "used_translation": "hol"
+        }
+      ]
+    },
+    {
+      "context": "Understanding",
+      "translations": ["verstehen", "kapieren", "begreifen"],
+      "examples": [
+        {
+          "english": "I don’t get it.",
+          "german": "Ich verstehe das nicht.",
+          "used_translation": "verstehe"
+        },
+        {
+          "english": "Do you get the joke?",
+          "german": "Verstehst du den Witz?",
+          "used_translation": "verstehst"
+        },
+        {
+          "english": "She got the idea.",
+          "german": "Sie hat die Idee begriffen.",
+          "used_translation": "begriffen"
+        },
+        {
+          "english": "He doesn’t get math.",
+          "german": "Er kapiert Mathe nicht.",
+          "used_translation": "kapiert"
+        }
+      ]
+    },
+    {
+      "context": "Arriving",
+      "translations": ["ankommen", "erreichen"],
+      "examples": [
+        {
+          "english": "We got to Berlin.",
+          "german": "Wir kamen in Berlin an.",
+          "used_translation": "kamen"
+        },
+        {
+          "english": "He got home late.",
+          "german": "Er kam spät nach Hause.",
+          "used_translation": "kam"
+        },
+        {
+          "english": "When did you get there?",
+          "german": "Wann bist du dort angekommen?",
+          "used_translation": "angekommen"
+        },
+        {
+          "english": "She got to the station.",
+          "german": "Sie erreichte den Bahnhof.",
+          "used_translation": "erreichte"
+        }
+      ]
+    }
+  ]
 }
 
-
-Benutze ebenfalls die Einrückungen. Ich möchte beim Kopieren der Antwort nicht, dass '['-Zeichen mit einem '\' escaped werden !!
+Benutze ebenfalls die Einrückungen. Ich möchte beim Kopieren de Antwort nicht, dass '['-Zeichen mit einem '\' escaped werden !!
 
 Der englische Begriff lautet:
 

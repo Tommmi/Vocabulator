@@ -1,105 +1,129 @@
 Eine deutsche Vokabel kann ja auf Englisch unterschiedliche Übersetzungen haben.
 Die verschiedenen Übersetzungen könnten eventuell einfach nur alternative Übersetzungen sein oder auch etwas ganz anderes bedeuten.
 Es ist also manchmal entscheidend für die korrekte Übersetzung den Bedeutungskontext der Vokabel zu kennen.
-Liefere dem Nutzer für den unten angegebenen deutschen Begriff mögliche englische Übersetzungen.
-Gruppiere die Übersetzungen nach Bedeutungskontext. 
-Der Bedeutungskontext soll nach Möglichkeit nur mit einem einzigen deutschen Wort ausgedrückt werden.
-Innerhalb eines Bedeutungskontextes dürfen, falls vorhanden, verschiedene englische Übersetzungsalternativen erscheinen.
-Außerdem liefere mir für jeden Bedeutungskontext auf deutsch drei möglichst kurze Sätze mit den englischen Übersetzungen. Bevorzuge das Präsenz, falls möglich.
+Liefere mir für jeden möglichen Bedeutungskontext vier möglichst kurze deutsche Sätze (maximal 5 Wörter lang). 
+Verwende nach Möglichkeit das Präsenz.
+Überlege genau, ob diese deutschen Beispielsätze auch wirklich so von Deutschen gesagt werden würden.
+Prüfe auch, ob sie tatsächlich den unten stehenden Begriff verwenden. 
+Korrigiere die Beispielsätze gegebenenfalls oder bilde andere Sätze, um diese Bedingungen zu erfüllen.
+Übersetze die Beispielsätze dann ins Englische.
+Welche englische Vokabel ("A-Übersetzung") wurde in diesen Beispielen jeweils zur Übersetzung des deutschen Begriffes verwendet?  
+Gruppiere die Beispielsätze jetzt nach Bedeutungskontext. 
+Drücke jeden Bedeutungskontext nach Möglichkeit mit einem treffenden deutschen Begriff aus.
+Bilde für jeden Bedeutungskontext eine Liste der alternativen englischen Übersetzungen ("translations"), 
+indem Du die zum Kontext gehörenden "A-Übersetzungen" auflistest.
+
 Deine Antwort soll nur aus einer json-Struktur bestehen:
 Beispiel:
 {
-	"word":"wollen"
-	"contexts":[
-		{
-			"context":"Absicht",
-			"translations": [
-				"want (to)", 
-				"would like (to)"
-			],
-			"examples": [
-				{
-					"german":"Ich will ein Eis.",
-					"english":"I want an ice cream"
-				},
-				{
-					"german":"Sie will nach Hause gehen.",
-					"english":"She wants to go home."
-				},
-				{
-					"german":"Willst du mitkommen?",
-					"english":"Do you want to come along?"
-				}
-			]
-		},
-		{
-			"context":"Wunsch (höflich oder indirekt)",
-			"translations": [
-				"would like (to)", 
-				"wish (to)"
-			],
-			"examples": [
-				{
-					"german":"Ich würde das nicht wollen.",
-					"english": "I wouldn't want that."
-				},
-				{
-					"german":"Er will nicht stören.",
-					"english":"He would rather not disturb."
-				},
-				{
-					"german":"Sie will lieber allein sein.",
-					"english":"She would like to be alone."
-				}
-			]
-		},
-		{
-			"context":"Entschlossenheit",
-			"translations": [
-				"be determined (to)", 
-				"insist (on)"
-			],
-			"examples": [
-				{
-					"german":"Ich will das schaffen.",
-					"english":"I am determined to make it."
-				},
-				{
-					"german":"Er will unbedingt gewinnen.",
-					"english":"He insists on winning."
-				},
-				{
-					"german":"Sie will ihren eigenen Weg gehen.",
-					"english":"She is determined to go her own way."
-				}
-			]
-		},
-		{
-			"context":"Behauptung (angeblich)",
-			"translations": [
-				"claim (to)", 
-				"say (that one...)",
-				"be said to"
-			],
-			"examples": [
-				{
-					"german":"Er will den Täter gesehen haben.",
-					"english":"He claims to have seen the perpetrator."
-				},
-				{
-					"german":"Sie will davon nichts gewusst haben.",
-					"english":"She says she didn’t know about it."
-				},
-				{
-					"german":"Der Zeuge will alles gehört haben.",
-					"english":"The witness claims to have heard everything"
-				}
-			]
-		}
-	]
+  "word": "aufgeben",
+  "contexts": [
+    {
+      "context": "Verzicht",
+      "translations": ["give up", "quit", "surrender"],
+      "examples": [
+        {
+          "german": "Ich gebe das Rauchen auf.",
+          "english": "I give up smoking.",
+          "used_translation": "give up"
+        },
+        {
+          "german": "Sie gibt das Projekt auf.",
+          "english": "She quits the project.",
+          "used_translation": "quit"
+        },
+        {
+          "german": "Wir geben den Plan auf.",
+          "english": "We give up the plan.",
+          "used_translation": "give up"
+        },
+        {
+          "german": "Er gibt sich geschlagen.",
+          "english": "He surrenders.",
+          "used_translation": "surrender"
+        }
+      ]
+    },
+    {
+      "context": "Versand",
+      "translations": ["send", "mail", "post", "dispatch"],
+      "examples": [
+        {
+          "german": "Ich gebe das Paket auf.",
+          "english": "I send the package.",
+          "used_translation": "send"
+        },
+        {
+          "german": "Er gibt einen Brief auf.",
+          "english": "He mails a letter.",
+          "used_translation": "mail"
+        },
+        {
+          "german": "Sie gibt das Paket ab.",
+          "english": "She posts the parcel.",
+          "used_translation": "post"
+        },
+        {
+          "german": "Wir geben das Päckchen auf.",
+          "english": "We dispatch the parcel.",
+          "used_translation": "dispatch"
+        }
+      ]
+    },
+    {
+      "context": "Auftrag",
+      "translations": ["place", "submit", "enter"],
+      "examples": [
+        {
+          "german": "Ich gebe eine Bestellung auf.",
+          "english": "I place an order.",
+          "used_translation": "place"
+        },
+        {
+          "german": "Sie gibt den Auftrag auf.",
+          "english": "She submits the order.",
+          "used_translation": "submit"
+        },
+        {
+          "german": "Wir geben eine Anzeige auf.",
+          "english": "We place an ad.",
+          "used_translation": "place"
+        },
+        {
+          "german": "Er gibt den Befehl auf.",
+          "english": "He enters the command.",
+          "used_translation": "enter"
+        }
+      ]
+    },
+    {
+      "context": "Resignation",
+      "translations": ["give in", "resign", "concede"],
+      "examples": [
+        {
+          "german": "Ich gebe endlich auf.",
+          "english": "I finally give in.",
+          "used_translation": "give in"
+        },
+        {
+          "german": "Sie gibt kampflos auf.",
+          "english": "She resigns without a fight.",
+          "used_translation": "resign"
+        },
+        {
+          "german": "Wir geben uns geschlagen.",
+          "english": "We concede defeat.",
+          "used_translation": "concede"
+        },
+        {
+          "german": "Er gibt innerlich auf.",
+          "english": "He resigns internally.",
+          "used_translation": "resign"
+        }
+      ]
+    }
+  ]
 }
-
-
 Benutze ebenfalls die Einrückungen. Ich möchte beim Kopieren der Antwort nicht, dass '['-Zeichen mit einem '\' escaped werden !!
 
 Der deutsche begriff lautet:

@@ -31,13 +31,21 @@ namespace OpenAiConsoleApp
             var processorGermanWord = new Processor4GermanWord(openAiFactory, questionFilePath: options.QuestionGermanWordFilePath);
             var processorEnglishWord = new Processor4EnglishWord(openAiFactory, questionFilePath: options.QuestionEnglishWordFilePath);
 
-            RootObject? answerJson = await processorGermanWord.LoadAnswer(germanWord: "aufgeben");
+            RootObject? answerJson = await processorGermanWord.LoadAnswer(germanWord: "geben");
 
-            if (answerJson != null) 
+            if (answerJson != null)
             {
                 Console.WriteLine("----- Antwort von OpenAI -----");
                 WriteJsonAnswer(answerJson);
             }
+
+            //answerJson = await processorEnglishWord.LoadAnswer(englishWord: "to send");
+
+            //if (answerJson != null)
+            //{
+            //    Console.WriteLine("----- Antwort von OpenAI -----");
+            //    WriteJsonAnswer(answerJson);
+            //}
         }
 
         private static void WriteJsonAnswer(RootObject? answerJson)

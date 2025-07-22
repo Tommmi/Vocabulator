@@ -45,6 +45,11 @@ namespace Vocabulator.Domain.Services.QuestionTypes.GermanWord
                         }
                     }
                 }
+
+                if(indexesToBeDeleted.Any())
+                {
+                    response.Contexts = response.Contexts.Where((ctx, idx) => !indexesToBeDeleted.Contains(idx)).ToArray();
+                } 
             }
 
             return response;
