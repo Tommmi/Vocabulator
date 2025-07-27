@@ -1,0 +1,27 @@
+PARAM(ANSWER1)PARAM
+
+Suche für jede englische Übersetzung zwei kurze englische Beispielsatz (max. 5 Wörter lang). Verwende nach Möglichkeit das Präsenz. 
+Überlege auch, ob englische Muttersprachler wirklich einen solchen Satz bilden würden. Wenn nicht, suche einen anderen Beispielsatz.
+
+Liefer nur das Json. Hier eine Beispielstruktur:
+
+{
+  "word": "sagen",
+  "translations": [
+    {
+      "translation": "say",
+      "context": "allgemein",
+	  "examples":[
+		"I say the truth.",
+        "They say it often."
+	  ]
+    },
+    {
+      "translation": "state",
+      "context": "offiziell",
+	  "examples":[
+		"I state my opinion.",
+        "He states the facts."
+    }
+...
+}

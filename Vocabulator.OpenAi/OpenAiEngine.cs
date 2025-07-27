@@ -24,6 +24,14 @@ namespace Vocabulator.OpenAi
             var inputText = question.Text;
 
             using var client = new HttpClient();
+
+            // TODO: entfernen
+            Console.WriteLine("###################################################");
+            Console.WriteLine("OpenAI API Request");
+            Console.WriteLine("###################################################");
+            Console.WriteLine("Request:");
+            Console.WriteLine(question.Text);
+
             string? responseString = await TryCallOpenAi(client, _openApiKey, inputText);
 
             if (responseString != null)
@@ -32,6 +40,8 @@ namespace Vocabulator.OpenAi
 
                 if (resultText != null)
                 {
+                    Console.WriteLine("Response:");
+                    Console.WriteLine(resultText);
                     return DeserializeJsonAnswer(resultText);
                 }
             }
@@ -63,6 +73,11 @@ namespace Vocabulator.OpenAi
 
         private static TResponse? DeserializeJsonAnswer(string resultText)
         {
+            if (typeof(TResponse) == typeof(string))
+            {
+                return (TResponse)(object)resultText;
+            }
+
             resultText = ExtractJson(resultText);
 
             var jsonOptions = new JsonSerializerOptions
@@ -102,6 +117,10 @@ namespace Vocabulator.OpenAi
             var requestBody = new
             {
                 model = "gpt-4o",
+                temperature = 0.2,
+                top_p = 0.9,
+                presence_penalty = 0,
+                frequency_penalty = 0,
                 messages = new[]
                 {
                     new { role = "user", content = inputText }

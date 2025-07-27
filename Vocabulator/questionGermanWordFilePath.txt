@@ -1,26 +1,29 @@
 Eine deutsche Vokabel kann ja auf Englisch unterschiedliche Übersetzungen haben.
 Die verschiedenen Übersetzungen könnten eventuell einfach nur alternative Übersetzungen sein oder auch etwas ganz anderes bedeuten.
 Es ist also manchmal entscheidend für die korrekte Übersetzung den Bedeutungskontext der Vokabel zu kennen.
-Liefere mir für jeden möglichen Bedeutungskontext vier möglichst kurze deutsche Sätze (maximal 5 Wörter lang). 
+Liefere mir für den unten stehenden deutschen Begriff jeden möglichen Bedeutungskontext.
+Bilde zu jedem Bedeutungskontext vier möglichst kurze deutsche Sätze (maximal 5 Wörter lang). 
 Verwende nach Möglichkeit das Präsenz.
 Überlege genau, ob diese deutschen Beispielsätze auch wirklich so von Deutschen gesagt werden würden.
 Prüfe auch, ob sie tatsächlich den unten stehenden Begriff verwenden. 
 Korrigiere die Beispielsätze gegebenenfalls oder bilde andere Sätze, um diese Bedingungen zu erfüllen.
 Übersetze die Beispielsätze dann ins Englische.
 Welche englische Vokabel ("A-Übersetzung") wurde in diesen Beispielen jeweils zur Übersetzung des deutschen Begriffes verwendet?  
-Gruppiere die Beispielsätze jetzt nach Bedeutungskontext. 
-Drücke jeden Bedeutungskontext nach Möglichkeit mit einem treffenden deutschen Begriff aus.
-Bilde für jeden Bedeutungskontext eine Liste der alternativen englischen Übersetzungen ("translations"), 
-indem Du die zum Kontext gehörenden "A-Übersetzungen" auflistest.
+
+Gruppiere jetzt alle Beispielsätze nach der verwendeten "A-Übersetzung".
+
+Außer dass sie eine andere englische Vokabel zur Übersetzung des unten stehenden deutschen Begriffes 
+verwenden, gibt es ebentuell andere abstrakte Unterscheidungsmerkmale der verschiedenen Gruppen. Gebe jeder Gruppe einen 
+treffenden deutschen Begriff, der diese Gruppe kennzeichnet.
+
 
 Deine Antwort soll nur aus einer json-Struktur bestehen:
 Beispiel:
 {
   "word": "aufgeben",
-  "contexts": [
+  "translations": [
     {
-      "context": "Verzicht",
-      "translations": ["give up", "quit", "surrender"],
+      "a-translation": "give up",
       "examples": [
         {
           "german": "Ich gebe das Rauchen auf.",
@@ -28,51 +31,24 @@ Beispiel:
           "used_translation": "give up"
         },
         {
-          "german": "Sie gibt das Projekt auf.",
-          "english": "She quits the project.",
-          "used_translation": "quit"
-        },
-        {
           "german": "Wir geben den Plan auf.",
           "english": "We give up the plan.",
           "used_translation": "give up"
-        },
-        {
-          "german": "Er gibt sich geschlagen.",
-          "english": "He surrenders.",
-          "used_translation": "surrender"
         }
       ]
     },
     {
-      "context": "Versand",
-      "translations": ["send", "mail", "post", "dispatch"],
+      "a-translation": "send",
       "examples": [
         {
           "german": "Ich gebe das Paket auf.",
           "english": "I send the package.",
           "used_translation": "send"
-        },
-        {
-          "german": "Er gibt einen Brief auf.",
-          "english": "He mails a letter.",
-          "used_translation": "mail"
-        },
-        {
-          "german": "Sie gibt das Paket ab.",
-          "english": "She posts the parcel.",
-          "used_translation": "post"
-        },
-        {
-          "german": "Wir geben das Päckchen auf.",
-          "english": "We dispatch the parcel.",
-          "used_translation": "dispatch"
         }
       ]
     },
     {
-      "context": "Auftrag",
-      "translations": ["place", "submit", "enter"],
+      "a-translation": "place",
       "examples": [
         {
           "german": "Ich gebe eine Bestellung auf.",
@@ -80,45 +56,9 @@ Beispiel:
           "used_translation": "place"
         },
         {
-          "german": "Sie gibt den Auftrag auf.",
-          "english": "She submits the order.",
-          "used_translation": "submit"
-        },
-        {
           "german": "Wir geben eine Anzeige auf.",
           "english": "We place an ad.",
           "used_translation": "place"
-        },
-        {
-          "german": "Er gibt den Befehl auf.",
-          "english": "He enters the command.",
-          "used_translation": "enter"
-        }
-      ]
-    },
-    {
-      "context": "Resignation",
-      "translations": ["give in", "resign", "concede"],
-      "examples": [
-        {
-          "german": "Ich gebe endlich auf.",
-          "english": "I finally give in.",
-          "used_translation": "give in"
-        },
-        {
-          "german": "Sie gibt kampflos auf.",
-          "english": "She resigns without a fight.",
-          "used_translation": "resign"
-        },
-        {
-          "german": "Wir geben uns geschlagen.",
-          "english": "We concede defeat.",
-          "used_translation": "concede"
-        },
-        {
-          "german": "Er gibt innerlich auf.",
-          "english": "He resigns internally.",
-          "used_translation": "resign"
         }
       ]
     }

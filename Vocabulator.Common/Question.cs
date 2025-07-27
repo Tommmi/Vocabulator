@@ -1,4 +1,6 @@
-﻿namespace Vocabulator.Common;
+﻿using System.Text.Json;
+
+namespace Vocabulator.Common;
 
 public class Question
 {

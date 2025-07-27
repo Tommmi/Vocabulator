@@ -1,8 +1,11 @@
-﻿namespace Vocabulator.Domain.Services.QuestionTypes.GermanWord;
+﻿using System.Text.Json.Serialization;
+
+namespace Vocabulator.Domain.Services.QuestionTypes.GermanWord;
 
 public class ContextEntry
 {
-    public string Context { get; set; }
-    public string[] Translations { get; set; }
+    [JsonPropertyName("a-translation")]
+
+    public string Translation { get; set; }
     public Example[] Examples { get; set; }
 }

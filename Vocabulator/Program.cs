@@ -1,14 +1,17 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Text.Json;
-using CommandLine;
+﻿using CommandLine;
 using Microsoft.Extensions.Configuration;
 using Vocabulator;
-using Vocabulator.Common;
-using Vocabulator.Domain.Services.QuestionTypes.EnglishWord;
 using Vocabulator.Domain.Services.QuestionTypes.GermanWord;
-using Vocabulator.OpenAi;
+using Vocabulator.Domain.Services.QuestionTypes.GermanWord1;
+using Vocabulator.Domain.Services.QuestionTypes.GermanWord2;
+using Vocabulator.Domain.Services.QuestionTypes.GermanWord3;
+using Vocabulator.Domain.Services.QuestionTypes.GermanWord4;
+using Vocabulator.Domain.Services.QuestionTypes.GermanWord5;
+using Vocabulator.Domain.Services.QuestionTypes.GermanWordExt1;
+using Vocabulator.Domain.Services.QuestionTypes.GermanWordExt2;
+using AnswerWord2 = Vocabulator.Domain.Services.QuestionTypes.GermanWord2;
+using AnswerWord3 = Vocabulator.Domain.Services.QuestionTypes.GermanWord3;
+using AnswerWord5 = Vocabulator.Domain.Services.QuestionTypes.GermanWord5;
 
 namespace OpenAiConsoleApp
 {
@@ -28,25 +31,107 @@ namespace OpenAiConsoleApp
         private static async Task Process(Options options, Config config)
         {
             var openAiFactory = new AiEngineFactory(openApiKey: config.ApiKey);
-            var processorGermanWord = new Processor4GermanWord(openAiFactory, questionFilePath: options.QuestionGermanWordFilePath);
-            var processorEnglishWord = new Processor4EnglishWord(openAiFactory, questionFilePath: options.QuestionEnglishWordFilePath);
+            var processorGermanWordExt1 = new Processor4GermanWordExt1(openAiFactory, questionFilePath: options.QuestionGermanWordExt1FilePath);
+            var processorGermanWordExt2 = new Processor4GermanWordExt2(openAiFactory, questionFilePath: options.QuestionGermanWordExt2FilePath);
 
-            RootObject? answerJson = await processorGermanWord.LoadAnswer(germanWord: "geben");
-
-            if (answerJson != null)
+            string word = "halten";
+            var answer1 = await processorGermanWordExt1.LoadAnswer(word: word);
+            if (answer1 != null)
             {
-                Console.WriteLine("----- Antwort von OpenAI -----");
-                WriteJsonAnswer(answerJson);
+                var answer2 = await processorGermanWordExt2.LoadAnswer(word: word, answer1:answer1);
+                if (answer2 != null)
+                {
+
+                }
+
             }
 
-            //answerJson = await processorEnglishWord.LoadAnswer(englishWord: "to send");
+            //var processorGermanWord1 = new Processor4GermanWord1(openAiFactory, questionFilePath: options.QuestionGermanWord1FilePath);
+            //var processorGermanWord2 = new Processor4GermanWord2(openAiFactory, questionFilePath: options.QuestionGermanWord2FilePath);
+            //var processorGermanWord3 = new Processor4GermanWord3(openAiFactory, questionFilePath: options.QuestionGermanWord3FilePath);
+            //var processorGermanWord4 = new Processor4GermanWord4(openAiFactory, questionFilePath: options.QuestionGermanWord4FilePath);
+            //var processorGermanWord5 = new Processor4GermanWord5(openAiFactory, questionFilePath: options.QuestionGermanWord5FilePath);
 
-            //if (answerJson != null)
+            //string word = "sagen";
+            //string? answer1 = await processorGermanWord1.LoadAnswer(germanWord: word);
+
+            //if (answer1 != null)
             //{
-            //    Console.WriteLine("----- Antwort von OpenAI -----");
-            //    WriteJsonAnswer(answerJson);
+            //    Console.WriteLine("----- processorGermanWord Step 1 -----");
+
+            //    var answer2 = await processorGermanWord2.LoadAnswer(germanWord: word, answer1:answer1);
+            //    if (answer2 != null)
+            //    {
+            //        Console.WriteLine("----- processorGermanWord Step 2 -----");
+
+            //        var answer3 = await processorGermanWord3.LoadAnswer(answer1: answer2);
+            //        if (answer3 != null)
+            //        {
+            //            Console.WriteLine("----- processorGermanWord Step 3 -----");
+
+            //            var answer4 = await processorGermanWord4.LoadAnswer(germanWord:word,answer1: answer3);
+            //            if (answer4 != null)
+            //            {
+            //                Console.WriteLine("----- processorGermanWord Step 4 -----");
+
+            //                var answer5 = await processorGermanWord5.LoadAnswer(answer1: answer4);
+            //                if (answer5 != null)
+            //                {
+            //                    Console.WriteLine("----- processorGermanWord Step 5 -----");
+            //                    WriteJsonAnswer(answer5);
+            //                }
+            //            }
+            //        }
+            //    }
             //}
         }
+
+        private static void WriteJsonAnswer(AnswerWord5.WordAnswer? answerJson)
+        {
+            Console.WriteLine("----- Antwort von OpenAI parsed -----");
+
+            // Ausgabe zum Test
+            Console.WriteLine($"Wort: {answerJson.Word}");
+            foreach (var translation in answerJson.Translations)
+            {
+                Console.WriteLine($"context:{translation.Context}");
+                Console.WriteLine("Übersetzung: " + string.Join(", ", translation.Translation));
+                foreach(var example in  translation.Examples)
+                {
+                    Console.WriteLine("Example: " + example);
+                }
+            }
+        }
+        private static void WriteJsonAnswer(AnswerWord2.WordAnswer? answerJson)
+        {
+            Console.WriteLine("----- Antwort von OpenAI parsed -----");
+
+            // Ausgabe zum Test
+            Console.WriteLine($"Wort: {answerJson.Word}");
+            foreach (var translation in answerJson.Translations)
+            {
+                Console.WriteLine($"context:{translation.Context}");
+                Console.WriteLine("Übersetzung: " + string.Join(", ", translation.Translation));
+            }
+        }
+
+        private static void WriteJsonAnswer(AnswerWord3.WordAnswer? answerJson)
+        {
+            Console.WriteLine("----- Antwort von OpenAI parsed -----");
+
+            // Ausgabe zum Test
+            Console.WriteLine($"Wort: {answerJson.Word}");
+            foreach (var translation in answerJson.Translations)
+            {
+                Console.WriteLine($"context:{translation.Context}");
+                Console.WriteLine("Übersetzung: " + string.Join(", ", translation.Translation));
+                foreach (var german in translation.German)
+                {
+                    Console.WriteLine($"Rückübersetzung: {german}");
+                }
+            }
+        }
+
 
         private static void WriteJsonAnswer(RootObject? answerJson)
         {
@@ -54,10 +139,9 @@ namespace OpenAiConsoleApp
 
             // Ausgabe zum Test
             Console.WriteLine($"Wort: {answerJson.Word}");
-            foreach (var context in answerJson.Contexts)
+            foreach (var context in answerJson.Translations)
             {
-                Console.WriteLine($"\nKontext: {context.Context}");
-                Console.WriteLine("Übersetzungen: " + string.Join(", ", context.Translations));
+                Console.WriteLine("Übersetzung: " + string.Join(", ", context.Translation));
                 foreach (var example in context.Examples)
                 {
                     Console.WriteLine($"  - {example.German} => {example.English}");

@@ -1,0 +1,169 @@
+Wovon hängt es ab, wie man den deutschen Begriff "sagen" ins Englische übersetzen darf ?
+
+Die passende englische Übersetzung für den deutschen Begriff „sagen“ hängt stark vom Kontext ab. Im Deutschen ist „sagen“ ein sehr vielseitiges Verb, im Englischen muss man hingegen meist zwischen mehreren spezifischeren Verben wählen. Die wichtigsten Einflussfaktoren sind:
+
+{
+	"factors": [
+		{
+			"factor":"Art der Äußerung (neutral, formell, emphatisch, etc.)",
+			"factor-variations": [
+				{
+					"variation": "neutral/informell",
+					"translations": [
+						{
+							"translation":"say"
+						}
+					]
+				},
+				{
+					"variation": "formell / offiziell	",
+					"translations": [
+						{
+							"translation":"state"
+						},
+						{
+							"translation":"announce"
+						}
+					]
+				},
+				{
+					"variation": "mit Nachdruck / klarer Absicht",
+					"translations": [
+						{
+							"translation":"declare"
+						},
+						{
+							"translation":"proclaim"
+						}
+					]
+				},
+				{
+					"variation": "kurz / beiläufig / spontan",
+					"translations": [
+						{
+							"translation":"remark"
+						},
+						{
+							"translation":"mention"
+						}
+					]
+				},
+				{
+					"variation": "flüsternd, leise",
+					"translations": [
+						{
+							"translation":"whisper"
+						},
+						{
+							"translation":", murmur"
+						}
+					]
+				},
+				{
+					"variation": "laut / aggressiv",
+					"translations": [
+						{
+							"translation":"shout",
+						},
+						{
+							"translation":"yell",
+						},
+						{
+							"translation":"exclaim",
+						}
+					]
+				}
+			]
+		},
+		{
+			"factor":"Absicht",
+			"factor-variations": [
+				{
+					"variation": "Information weitergeben",
+					"translations": [
+						{
+							"translation":"tell",
+						},
+						{
+							"translation":"inform",
+						}
+					]
+				},
+				{
+					"variation": "Meinung äußern",
+					"translations": [
+						{
+							"translation":"say",
+						},
+						{
+							"translation":"assert",
+						},
+						{
+							"translation":"claim",
+						}
+					]
+				},
+				{
+					"variation": "Befehlen / Anweisen",
+					"translations": [
+						{
+							"translation":"tell",
+						},
+						{
+							"translation":"order",
+						},
+						{
+							"translation":"command",
+						}
+					]
+				},
+				{
+					"variation": "Fragen stellen",
+					"translations": [
+						{
+							"translation":"ask",
+						}
+					]
+				},
+				{
+					"variation": "Etwas betonen oder bekräftigen",
+					"translations": [
+						{
+							"translation":"affirm",
+						},
+						{
+							"translation":"insist",
+						},
+						{
+							"translation":"stress",
+						}
+					]
+				}				
+			]
+		}
+	],
+	"idiomatics":[
+		{
+			"source":"Was soll das heißen?",
+			"translation":"What do you mean?"
+		},
+		{
+			"source":"Man sagt, dass...",
+			"translation":"It is said that..."
+		},
+		{
+			"source":"Ich sage dir was!",
+			"translation":"Let me tell you something!"
+		},
+		{
+			"source":"Ehrlich gesagt...",
+			"translation":"Honestly speaking..."
+		}
+	]
+}
+
+Wovon hängt es ab, wie man den deutschen Begriff "PARAM(WORD)PARAM" ins Englische übersetzen darf ?
+
+Verwende das gleiche Json-Schema!
+
+

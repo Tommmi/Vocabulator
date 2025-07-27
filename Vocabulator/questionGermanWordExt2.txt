@@ -1,0 +1,89 @@
+Das Folgende sind die Übersetzungsvariationen des deutschen Begriffs "PARAM(WORD)PARAM" ins Englische.
+
+PARAM(ANSWER1)PARAM
+
+Liefer mir zu jeder Übersetzung im angegeben Kontext einen englischen kurzen Beispielsatz. Verwende nach Möglichkeit maximal 5 Wörter. Verwende nach Möglichkeit nur das Präsenz.
+Übersetze das englische Beispiel ins Deutsche. Achte darauf, dass der deutsche Satz das Wort "PARAM(WORD)PARAM" auch verwendet und das ein deutscher Muttersprachler diesen Satz auch so sagen würde. 
+Wenn nicht, suche einen anderen Beispielsatz, bei dem diese Bedingungen zutreffen.
+
+Erweitere das Schema der Json Struktur in dieser Form:
+
+{
+        "factors": [
+                {
+                        "factor":"Art der Handlung (neutral, formell, großzügig, etc.)",
+                        "factor-variations": [
+                                {
+                                        "variation": "neutral/informell",
+                                        "translations": [
+                                                {
+                                                        "translation":"give",
+														"example":{
+															"source":"I give my time.",
+															"translation":"Ich gebe meine Zeit."
+														}
+                                                }
+                                        ]
+                                },
+                                {
+                                        "variation": "formell / offiziell",
+                                        "translations": [
+                                                {
+                                                        "translation":"grant",
+														"example":{
+															"source":"I give my time.",
+															"translation":"Ich gebe meine Zeit."
+														}
+                                                },
+                                                {
+                                                        "translation":"bestow",
+														"example":{
+															"source":"I give my time.",
+															"translation":"Ich gebe meine Zeit."
+														}
+                                                }
+                                        ]
+                                },
+                                {
+                                        "variation": "großzügig / freigiebig",
+                                        "translations": [
+                                                {
+                                                        "translation":"donate",
+														"example":{
+															"source":"I give my time.",
+															"translation":"Ich gebe meine Zeit."
+														}
+                                                },
+                                                {
+                                                        "translation":"contribute",
+														"example":{
+															"source":"I give my time.",
+															"translation":"Ich gebe meine Zeit."
+														}
+                                                }
+                                        ]
+                                }....
+                        ]
+                },
+				...
+        ],
+        "idiomatics":[
+                {
+                        "source":"Es gibt...",
+                        "translation":"There is/are..."
+                },
+                {
+                        "source":"Gib mir Bescheid.",
+                        "translation":"Let me know."
+                },
+                {
+                        "source":"Gib nicht auf!",
+                        "translation":"Don't give up!"
+                },
+                {
+                        "source":"Das gibt's doch nicht!",
+                        "translation":"I can't believe it!"
+                }
+        ]
+}
+

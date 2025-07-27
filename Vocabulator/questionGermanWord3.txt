@@ -1,0 +1,26 @@
+PARAM(ANSWER1)PARAM
+
+Geh Item für Item durch die Liste und erweiter die Liste um die zwei treffendsten Rückübersetzungen der englischen Begriffe ins Deutsche.
+
+Gib die Antwort in Form eines Json zurück:
+
+{
+  "word": "holen",
+  "translations": [
+    {
+      "translation": "fetch",
+      "context": "Hund",
+	  "german":[
+		"apportieren",
+		"bringen"
+	  ]
+    },
+    {
+      "translation": "get",
+      "context": "Arzt",
+	  "german":[
+		"holen",
+		"bekommen"
+    }
+...
+}

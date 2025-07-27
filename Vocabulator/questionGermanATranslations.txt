@@ -1,0 +1,18 @@
+Die folgende Json Struktur liefert Beispiele für die Übersetzung eines deutschen Begriffes:
+
+PARAM(ATRANSLATIONS)PARAM
+
+Gibt es Beispiele, in denen die hier verwendeten englischen Übersetzungsvokabeln ("a-translation") absolut nicht geeignet sind für die 
+Übersetzung des Begriffes PARAM(WORD)PARAM ?
+
+Erweiter ggf. die Json-Struktur !
+
+Liefere nur die Json-Struktur als Antwort zurück.
+Wenn es keine Erweiterungen geben muss, dann liefer das ursprüngliche Json zurück.
+
+
+
+
+
+
+
