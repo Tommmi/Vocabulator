@@ -1,6 +1,8 @@
 Wovon hängt es ab, wie man den deutschen Begriff "sagen" ins Englische übersetzen darf ?
 
-Die passende englische Übersetzung für den deutschen Begriff „sagen“ hängt stark vom Kontext ab. Im Deutschen ist „sagen“ ein sehr vielseitiges Verb, im Englischen muss man hingegen meist zwischen mehreren spezifischeren Verben wählen. Die wichtigsten Einflussfaktoren sind:
+Die passende englische Übersetzung für den deutschen Begriff „sagen“ hängt stark vom Kontext ab. 
+Im Deutschen ist „sagen“ ein sehr vielseitiges Wort, im Englischen muss man hingegen meist zwischen mehreren spezifischeren 
+Begriffen wählen. Die wichtigsten Einflussfaktoren sind:
 
 {
 	"factors": [

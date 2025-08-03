@@ -2,11 +2,14 @@ Das Folgende sind die Übersetzungsvariationen des deutschen Begriffs "PARAM(WORD
 
 PARAM(ANSWER1)PARAM
 
-Liefer mir zu jeder Übersetzung im angegeben Kontext einen englischen kurzen Beispielsatz. Verwende nach Möglichkeit maximal 5 Wörter. Verwende nach Möglichkeit nur das Präsenz.
-Übersetze das englische Beispiel ins Deutsche. Achte darauf, dass der deutsche Satz das Wort "PARAM(WORD)PARAM" auch verwendet und das ein deutscher Muttersprachler diesen Satz auch so sagen würde. 
-Wenn nicht, suche einen anderen Beispielsatz, bei dem diese Bedingungen zutreffen.
+Liefer mir zu jeder Übersetzung im angegeben Kontext einen englischen kurzen Beispielsatz. Verwende nach Möglichkeit maximal 5 Wörter. 
+Verwende nach Möglichkeit nur das Präsenz. Übersetze das englische Beispiel ins Deutsche. 
+Achte darauf, dass der deutsche Satz das Wort "PARAM(WORD)PARAM" auch verwendet und das ein deutscher Muttersprachler diesen 
+Satz auch so sagen würde. Wenn nicht, suche einen anderen Beispielsatz, bei dem diese Bedingungen zutreffen.
 
-Erweitere das Schema der Json Struktur in dieser Form:
+Gib Deine Antwort als Json Struktur.
+
+Hier ist ein Beispiel-Schema der Json Struktur, die Du für die Antwort nutzen sollst:
 
 {
         "factors": [

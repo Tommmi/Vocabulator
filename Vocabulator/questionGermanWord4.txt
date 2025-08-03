@@ -1,4 +1,0 @@
-PARAM(ANSWER1)PARAM
-
-Werfe aus diesem Json alle Übersetzungen raus, deren deutschen Rückübersetzungen ("german") nicht das Wort "PARAM(WORD)PARAM" enthalten.
-Enferne auch aus allen Items die Variable "german". Sie wird nicht mehr gebraucht.

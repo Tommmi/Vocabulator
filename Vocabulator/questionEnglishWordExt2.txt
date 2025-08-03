@@ -1,0 +1,158 @@
+Das Folgende sind die Übersetzungsvariationen des englischen Begriffs "PARAM(WORD)PARAM" ins Deutsche.
+
+PARAM(ANSWER1)PARAM
+
+Liefer mir zu jeder Übersetzung im angegeben Kontext einen deutschen kurzen Beispielsatz. Verwende nach Möglichkeit maximal 5 Wörter. 
+Verwende nach Möglichkeit nur das Präsenz. Übersetze das deutsche Beispiel ins Englische. 
+Achte darauf, dass der englische Satz das Wort "PARAM(WORD)PARAM" auch verwendet und das ein englischer Muttersprachler diesen 
+Satz auch so sagen würde. Wenn nicht, suche einen anderen Beispielsatz, bei dem diese Bedingungen zutreffen.
+
+Gib Deine Antwort als Json Struktur.
+
+Hier ist ein Beispiel-Schema der Json Struktur, die Du für die Antwort nutzen sollst:
+
+{
+  "factors": [
+    {
+      "factor": "Art der Aussage",
+      "variations": [
+        {
+          "variation": "neutral / informell",
+          "translations": [
+            {
+              "translation": "sagen",
+              "example":{
+                  "source": "Ich sage die Wahrheit",
+                  "translation": "I say the truth"
+              }
+            }
+          ]
+        },
+        {
+          "variation": "offiziell / formell",
+          "translations": [
+            {
+              "translation": "äußern",
+              "example":{
+                  "source": "Er äußert seine Meinung",
+                  "translation": "He says his opinion"
+              }
+            },
+            {
+              "translation": "bekunden",
+              "example":{
+                  "source": "Sie bekundet ihr Beileid",
+                  "translation": "She says her condolences"
+              }
+            },
+            {
+              "translation": "mitteilen",
+              "example":{
+                  "source": "Ich teile es mit",
+                  "translation": "I say it officially"
+              }
+            }
+          ]
+        },
+        {
+          "variation": "öffentlich / offiziell",
+          "translations": [
+            {
+              "translation": "verkünden",
+              "example":{
+                  "source": "Er verkündet das Ergebnis",
+                  "translation": "He says the result"
+              }
+            },
+            {
+              "translation": "erklären",
+              "example":{
+                  "source": "Ich erkläre den Plan",
+                  "translation": "I say the plan"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "factor": "Absicht hinter der Aussage",
+      "variations": [
+        {
+          "variation": "Information weitergeben",
+          "translations": [
+            {
+              "translation": "sagen",
+              "example":{
+                  "source": "Ich sage dir alles",
+                  "translation": "I say everything to you"
+              }
+            },
+            {
+              "translation": "mitteilen",
+              "example":{
+                  "source": "Ich teile es dir mit",
+                  "translation": "I say it to you"
+              }
+            }
+          ]
+        },
+        {
+          "variation": "Meinung äußern",
+          "translations": [
+            {
+              "translation": "meinen",
+              "example":{
+                  "source": "Ich meine das ernst",
+                  "translation": "I say it seriously"
+              }
+            },
+            {
+              "translation": "finden",
+              "example":{
+                  "source": "Ich finde das gut",
+                  "translation": "I say it's good"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "factor": "Tonfall / Emotionalität",
+      "variations": [
+        {
+          "variation": "dringlich / emotional",
+          "translations": [
+            {
+              "translation": "ausrufen",
+              "example":{
+                  "source": "Er ruft laut aus",
+                  "translation": "He says it loudly"
+              }
+            },
+            {
+              "translation": "schreien",
+              "example":{
+                  "source": "Sie schreit vor Angst",
+                  "translation": "She says it screaming"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "idiomatics": [
+    {
+      "source": "to say the least",
+      "translation": "gelinde gesagt",
+      "translation": "It was shocking, to say the least"
+    },
+    {
+      "source": "that goes without saying",
+      "translation": "das versteht sich von selbst",
+      "translation": "That goes without saying"
+    }
+  ]
+}

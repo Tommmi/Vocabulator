@@ -26,11 +26,11 @@ namespace Vocabulator.OpenAi
             using var client = new HttpClient();
 
             // TODO: entfernen
-            Console.WriteLine("###################################################");
-            Console.WriteLine("OpenAI API Request");
-            Console.WriteLine("###################################################");
-            Console.WriteLine("Request:");
-            Console.WriteLine(question.Text);
+            //Console.WriteLine("###################################################");
+            //Console.WriteLine("OpenAI API Request");
+            //Console.WriteLine("###################################################");
+            //Console.WriteLine("Request:");
+            //Console.WriteLine(question.Text);
 
             string? responseString = await TryCallOpenAi(client, _openApiKey, inputText);
 
@@ -40,8 +40,8 @@ namespace Vocabulator.OpenAi
 
                 if (resultText != null)
                 {
-                    Console.WriteLine("Response:");
-                    Console.WriteLine(resultText);
+                    //Console.WriteLine("Response:");
+                    //Console.WriteLine(resultText);
                     return DeserializeJsonAnswer(resultText);
                 }
             }

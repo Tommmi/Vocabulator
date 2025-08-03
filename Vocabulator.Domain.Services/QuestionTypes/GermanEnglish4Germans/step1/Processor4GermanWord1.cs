@@ -1,9 +1,8 @@
 ﻿using Vocabulator.Common;
 
-
-namespace Vocabulator.Domain.Services.QuestionTypes.GermanWordExt1
+namespace Vocabulator.Domain.Services.QuestionTypes.GermanEnglish4Germans.step1
 {
-    public class Processor4GermanWordExt1 : ProcessorBase<WordAnswer, Processor4GermanWordExt1.QuestionType>
+    public class Processor4GermanWord1 : ProcessorBase<WordAnswer, Processor4GermanWord1.QuestionType>
     {
         public class QuestionType : Question
         {
@@ -19,11 +18,11 @@ namespace Vocabulator.Domain.Services.QuestionTypes.GermanWordExt1
             }
         }
 
-        public Processor4GermanWordExt1(IAiEngineFactory aiEngineFactory, string questionFilePath) 
+        public Processor4GermanWord1(IAiEngineFactory aiEngineFactory, string questionFilePath) 
             : base(
                 aiEngineFactory: aiEngineFactory, 
                 questionFilePath: questionFilePath,
-                className:nameof(Processor4GermanWordExt1))
+                className:nameof(Processor4GermanWord1))
         {
         }
 

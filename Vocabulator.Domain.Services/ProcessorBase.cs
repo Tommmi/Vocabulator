@@ -3,7 +3,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Ude;
 using Vocabulator.Common;
-using Vocabulator.Domain.Services.QuestionTypes.GermanWord;
 
 namespace Vocabulator.Domain.Services;
 

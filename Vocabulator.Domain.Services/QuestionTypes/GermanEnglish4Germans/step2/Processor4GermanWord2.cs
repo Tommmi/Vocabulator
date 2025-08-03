@@ -1,24 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Vocabulator.Common;
-using Vocabulator.Domain.Services.QuestionTypes.GermanWord;
+﻿using Vocabulator.Common;
+using Vocabulator.Domain.Services.QuestionTypes.GermanEnglish4Germans.step1;
 
-namespace Vocabulator.Domain.Services.QuestionTypes.GermanWord2
+namespace Vocabulator.Domain.Services.QuestionTypes.GermanEnglish4Germans.step2
 {
     public class Processor4GermanWord2 : ProcessorBase<WordAnswer, Processor4GermanWord2.QuestionType>
     {
         public class QuestionType : Question
         {
-            public QuestionType(QuestionTemplate template, string germanWord, string answer1) 
+            public QuestionType(QuestionTemplate template, string word, string answer1) 
                 : base(
                     template, 
                     parameters:new List<KeyValuePair<string, string>>()
                     {
-                        new KeyValuePair<string, string>("PARAM(WORD)PARAM",germanWord),
-                        new KeyValuePair<string, string>("PARAM(ANSWER1)PARAM",answer1),
+                        new KeyValuePair<string, string>("PARAM(WORD)PARAM",word),
+                        new KeyValuePair<string, string>("PARAM(ANSWER1)PARAM",answer1)
                     })
             {
 
@@ -33,9 +28,9 @@ namespace Vocabulator.Domain.Services.QuestionTypes.GermanWord2
         {
         }
 
-        public async Task<WordAnswer?> LoadAnswer(string germanWord, string answer1)
+        public async Task<WordAnswer?> LoadAnswer(string word, WordAnswer answer1)
         {
-            var question = new QuestionType(_aiProcessor.QuestionTemplate, germanWord: germanWord, answer1:answer1);
+            var question = new QuestionType(_aiProcessor.QuestionTemplate, word, answer1:Serialize(answer1));
             return await _aiProcessor.DoRequest(question);
         }
     }
