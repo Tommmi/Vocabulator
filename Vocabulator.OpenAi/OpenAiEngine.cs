@@ -1,8 +1,9 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using Vocabulator.Common;
+using Vocabulator.OpenAi.Common;
 
 namespace Vocabulator.OpenAi
 {
@@ -23,31 +24,34 @@ namespace Vocabulator.OpenAi
 
             var inputText = question.Text;
 
-            using var client = new HttpClient();
+            string? responseString;
 
-            // TODO: entfernen
-            //Console.WriteLine("###################################################");
-            //Console.WriteLine("OpenAI API Request");
-            //Console.WriteLine("###################################################");
-            //Console.WriteLine("Request:");
-            //Console.WriteLine(question.Text);
 
-            string? responseString = await TryCallOpenAi(client, _openApiKey, inputText);
-
-            if (responseString != null)
+			using (var client = new HttpClient())
             {
-                var resultText = GetResultText(responseString);
-
-                if (resultText != null)
-                {
-                    //Console.WriteLine("Response:");
-                    //Console.WriteLine(resultText);
-                    return DeserializeJsonAnswer(resultText);
-                }
+	            client.Timeout = TimeSpan.FromMinutes(3);
+	            responseString = await TryCallOpenAi(client, _openApiKey, inputText);
             }
+               
 
-            return null;
+            var json = ExtractLastJson(responseString);
+
+            OpenAiResponse? openAiResponse = DeserializeOpenAiResponse(json);
+            
+            json = ExtractLastJson(openAiResponse?.Choices?.FirstOrDefault()?.Message?.Content);
+
+			return DeserializeJsonAnswer(json);
         }
+
+        private OpenAiResponse? DeserializeOpenAiResponse(string? resultText)
+        {
+	        if(resultText == null)
+	        {
+                return null;
+	        }
+
+            return JsonSerializer.Deserialize<OpenAiResponse>(resultText);
+		}
 
         private void ValidateQuestion(Question question)
         {
@@ -57,53 +61,71 @@ namespace Vocabulator.OpenAi
             }
         }
 
-        static string ExtractJson(string input)
+
+        private static TResponse? DeserializeJsonAnswer(string? json)
         {
-            int endIndex = input.LastIndexOf('}');
-            if (endIndex == -1)
-                throw new FormatException("Keine schließende Klammer gefunden.");
-
-            int startIndex = input.IndexOf('{');
-            if (startIndex == -1 || startIndex >= endIndex)
-                throw new FormatException("Keine öffnende Klammer gefunden oder sie liegt hinter der letzten schließenden.");
-
-            return input.Substring(startIndex, endIndex - startIndex + 1);
-        }
-
-
-        private static TResponse? DeserializeJsonAnswer(string resultText)
-        {
-            if (typeof(TResponse) == typeof(string))
+            if(json == null)
             {
-                return (TResponse)(object)resultText;
+                return null;
             }
 
-            resultText = ExtractJson(resultText);
+            if (typeof(TResponse) == typeof(string))
+            {
+                return (TResponse)(object)json;
+            }
 
             var jsonOptions = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             };
 
-            var answerJson = JsonSerializer.Deserialize<TResponse>(resultText, jsonOptions);
+            var answerJson = JsonSerializer.Deserialize<TResponse>(json, jsonOptions);
             return answerJson;
         }
 
-
-
-        private static string? GetResultText(string? responseString)
+        public static string? ExtractLastJson(string? source)
         {
-            using var jsonDoc = JsonDocument.Parse(responseString);
-            var resultText = jsonDoc.RootElement
-                .GetProperty("choices")[0]
-                .GetProperty("message")
-                .GetProperty("content")
-                .GetString();
-            return resultText;
+	        if (string.IsNullOrWhiteSpace(source))
+		        return null;
+
+	        if (!source.Contains('{') && !source.Contains('['))
+		        return null;
+
+	        var pattern = @"(\{(?:[^{}]|(?<open>\{)|(?<-open>\}))*(?(open)(?!))\})"  
+	                      + @"|(\[(?:[^\[\]]|(?<open>\[)|(?<-open>\]))*(?(open)(?!))\])"; 
+
+	        var matches = Regex.Matches(source, pattern, RegexOptions.Singleline);
+
+	        if (matches.Count == 0)
+		        return null;
+
+	        string lastJsonCandidate = matches[^1].Value.Trim();
+
+	        try
+	        {
+		        using var doc = JsonDocument.Parse(lastJsonCandidate);
+		        return doc.RootElement.GetRawText();
+	        }
+	        catch (JsonException)
+	        {
+		        for (int i = matches.Count - 2; i >= 0; i--)
+		        {
+			        try
+			        {
+				        using var doc = JsonDocument.Parse(matches[i].Value.Trim());
+				        return doc.RootElement.GetRawText();
+			        }
+			        // ReSharper disable once EmptyGeneralCatchClause
+			        catch
+			        {  }
+		        }
+
+		        return null;
+	        }
         }
 
 
-        private static async Task<string?> TryCallOpenAi(HttpClient client, string apiKey, string? inputText)
+		private static async Task<string?> TryCallOpenAi(HttpClient client, string apiKey, string? inputText)
         {
             var content = CreateHttpStringContent(client, apiKey, inputText);
 
@@ -116,15 +138,13 @@ namespace Vocabulator.OpenAi
 
             var requestBody = new
             {
-                model = "gpt-4o",
-                temperature = 0.2,
-                top_p = 0.9,
-                presence_penalty = 0,
-                frequency_penalty = 0,
+                model = "gpt-5-mini",
+                stream = false,
                 messages = new[]
                 {
                     new { role = "user", content = inputText }
                 }
+
             };
 
             var content = new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json");
@@ -145,17 +165,26 @@ namespace Vocabulator.OpenAi
                 return null;
             }
 
-            string responseString = await response.Content.ReadAsStringAsync();
-
-            if (!response.IsSuccessStatusCode)
+            try
             {
-                Console.WriteLine($"Fehler ({response.StatusCode}):");
-                Console.WriteLine(responseString);
-                return null;
+	            string responseString = await response.Content.ReadAsStringAsync();
+
+	            if (!response.IsSuccessStatusCode)
+	            {
+		            Console.WriteLine($"Fehler ({response.StatusCode}):");
+		            Console.WriteLine(responseString);
+		            return null;
+	            }
+
+	            return responseString;
+            }
+            catch (Exception ex)
+            {
+	            Console.WriteLine($"{ex.Message}");
+	            return null;
             }
 
-            return responseString;
-        }
+		}
 
-    }
+	}
 }

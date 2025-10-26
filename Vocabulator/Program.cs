@@ -1,11 +1,8 @@
 ﻿using CommandLine;
 using Microsoft.Extensions.Configuration;
-using Vocabulator;
-using Vocabulator.Domain.Services.QuestionTypes.EnglishGerman4Germans.step1;
-using Vocabulator.Domain.Services.QuestionTypes.GermanEnglish4Germans.step1;
-using Vocabulator.Domain.Services.QuestionTypes.GermanEnglish4Germans.step2;
+using Vocabulator.Domain.Services.QuestionTypes.GermanEnglish4Germans;
 
-namespace OpenAiConsoleApp
+namespace Vocabulator
 {
     static class Program
     {
@@ -23,24 +20,24 @@ namespace OpenAiConsoleApp
         private static async Task Process(Options options, Config config)
         {
             var openAiFactory = new AiEngineFactory(openApiKey: config.ApiKey);
-            var processorGermanWordExt1 = new Processor4GermanWord1(openAiFactory, questionFilePath: options.QuestionGermanWordExt1FilePath);
-            var processorGermanWordExt2 = new Processor4GermanWord2(openAiFactory, questionFilePath: options.QuestionGermanWordExt2FilePath);
-            var processorEnglishWordExt1 = new Processor4EnglishWord1(openAiFactory, questionFilePath: options.QuestionEnglishWordExt1FilePath);
-            var processorEnglishWordExt2 = new Processor4EnglishWord2(openAiFactory, questionFilePath: options.QuestionEnglishWordExt2FilePath);
-
-            string word = "think";
-            var answer1 = await processorEnglishWordExt1.LoadAnswer(word: word);
-            if (answer1 != null)
+            if(options.QuestionFilePath == null)
             {
-                var answer2 = await processorEnglishWordExt2.LoadAnswer(word: word, answer1:answer1);
-                if (answer2 != null)
+                throw new ApplicationException("missing config for QuestionFilePath");
+            }
+            var processor = new Processor4GermanEnglish4Germans(openAiFactory, questionFilePath: options.QuestionFilePath);
+
+            string word = "denken";
+            var answer = await processor.LoadAnswer(word: word);
+            if (answer != null)
+            {
+                foreach (var row in answer.Rows ?? [])
                 {
-                    var result = answer2.GetTrainingData(word);
-                    foreach(var item in result)
-                    {
-                        Console.WriteLine($"{item.Left} -> {item.Right}");
-                    }
+                    Console.WriteLine($"{row.Example} - {row.TranslatedExample}");
                 }
+            }
+            else
+            {
+                Console.WriteLine("can't find answer");
             }
         }
 
@@ -52,7 +49,7 @@ namespace OpenAiConsoleApp
 
             IConfiguration config = builder.Build();
 
-            string apiKey = config["OpenAI:ApiKey"];
+            string? apiKey = config["OpenAI:ApiKey"];
 
             if (string.IsNullOrWhiteSpace(apiKey))
             {
@@ -64,7 +61,7 @@ namespace OpenAiConsoleApp
                 }
             }
 
-            return new Config(apiKey: apiKey);
+            return new Config(apiKey: apiKey!);
         }
     }
 }

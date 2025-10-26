@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Vocabulator.Common;
+﻿using Vocabulator.Common;
 using Vocabulator.OpenAi;
 
 namespace Vocabulator

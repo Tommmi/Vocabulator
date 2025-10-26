@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Ude;
 using Vocabulator.Common;
 
@@ -11,6 +10,7 @@ public abstract class ProcessorBase<TResponse,TQuestionType>
     where TQuestionType: Question
 {
     private readonly IAiEngineFactory _aiEngineFactory;
+    // ReSharper disable once InconsistentNaming
     protected readonly AiQuestionProcessor<TResponse, TQuestionType> _aiProcessor;
 
     protected ProcessorBase(IAiEngineFactory aiEngineFactory, string questionFilePath, string className)

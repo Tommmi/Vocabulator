@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Vocabulator.Common\Vocabulator.Common.csproj" />
     <ProjectReference Include="..\Vocabulator.Interface\Vocabulator.Domain.Interface.csproj" />
   </ItemGroup>
 

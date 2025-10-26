@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-
-namespace Vocabulator.Common;
+﻿namespace Vocabulator.Common;
 
 public class Question
 {
@@ -14,7 +12,7 @@ public class Question
             string question = Template.Template;
             foreach (var parameter in Parameters)
             {
-                question = question.Replace(parameter.Key, parameter.Value);
+                question = question.Replace($"PARAM({parameter.Key})PARAM", parameter.Value);
             }
             return question;
         }

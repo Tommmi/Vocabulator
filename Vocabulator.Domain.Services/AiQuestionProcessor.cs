@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using Vocabulator.Common;
+﻿using Vocabulator.Common;
 
 namespace Vocabulator.Domain.Services
 {
@@ -23,19 +22,19 @@ namespace Vocabulator.Domain.Services
             string startMarker = "PARAM(";
             string endMarker = ")PARAM";
 
-            List<string> parameterNames = new();
+            HashSet<string> parameterNames = new();
 
             int index = 0;
             while ((index = @template.IndexOf(startMarker, index, StringComparison.Ordinal)) != -1)
             {
-                int start = index;
+                int start = index + startMarker.Length;
                 int pos = index + startMarker.Length;
 
                 while (pos < @template.Length)
                 {
                     if (@template.Substring(pos).StartsWith(endMarker))
                     {
-                        string paramName = @template.Substring(start, pos - start + endMarker.Length);
+                        string paramName = @template.Substring(start, pos - start);
                         parameterNames.Add(paramName);
                         break;
                     }
@@ -44,7 +43,7 @@ namespace Vocabulator.Domain.Services
                 index = pos+1;
             }
 
-            return parameterNames;
+            return parameterNames.ToList();
         }
 
         public Task<TResponse?> DoRequest(TQuestionType question)
