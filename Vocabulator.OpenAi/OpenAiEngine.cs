@@ -29,7 +29,7 @@ namespace Vocabulator.OpenAi
 
 			using (var client = new HttpClient())
             {
-	            client.Timeout = TimeSpan.FromMinutes(3);
+	            client.Timeout = TimeSpan.FromMinutes(5);
 	            responseString = await TryCallOpenAi(client, _openApiKey, inputText);
             }
                

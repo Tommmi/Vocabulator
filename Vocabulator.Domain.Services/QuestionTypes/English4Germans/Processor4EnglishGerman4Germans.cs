@@ -1,8 +1,8 @@
 ﻿using Vocabulator.Common;
 
-namespace Vocabulator.Domain.Services.QuestionTypes.GermanEnglish4Germans
+namespace Vocabulator.Domain.Services.QuestionTypes.English4Germans
 {
-    public class Processor4GermanEnglish4Germans : ProcessorBase<WordAnswer, Processor4GermanEnglish4Germans.QuestionType>
+    public class Processor4EnglishGerman4Germans : ProcessorBase<WordAnswer, Processor4EnglishGerman4Germans.QuestionType>
     {
         public class QuestionType : Question
         {
@@ -12,15 +12,16 @@ namespace Vocabulator.Domain.Services.QuestionTypes.GermanEnglish4Germans
                     parameters:
                     [
 	                    new("WORD", word),
-	                    new("deutsche", "deutsche"),
-	                    new("englische", "englische")
+	                    new("deutsche", "englische"),
+	                    new("englische", "deutsche"),
+	                    new("Muttersprache", "deutsch")
 					])
             {
 
             }
         }
 
-        public Processor4GermanEnglish4Germans(IAiEngineFactory aiEngineFactory, string questionFilePath) 
+        public Processor4EnglishGerman4Germans(IAiEngineFactory aiEngineFactory, string questionFilePath) 
             : base(
                 aiEngineFactory: aiEngineFactory, 
                 questionFilePath: questionFilePath,
@@ -28,7 +29,7 @@ namespace Vocabulator.Domain.Services.QuestionTypes.GermanEnglish4Germans
         {
         }
 
-        public async Task<WordAnswer?> LoadAnswer(string word)
+        public override async Task<WordAnswer?> LoadAnswer(string word)
         {
             var question = new QuestionType(_aiProcessor.QuestionTemplate, word);
             return await _aiProcessor.DoRequest(question);

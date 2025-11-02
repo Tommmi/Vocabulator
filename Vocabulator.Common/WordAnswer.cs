@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Vocabulator.Domain.Services.QuestionTypes
+namespace Vocabulator.Common
 {
     public class WordAnswer
     {

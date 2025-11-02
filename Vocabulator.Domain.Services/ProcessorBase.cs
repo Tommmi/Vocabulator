@@ -2,11 +2,11 @@
 using System.Text.Json;
 using Ude;
 using Vocabulator.Common;
+using Vocabulator.Domain.Interface;
 
 namespace Vocabulator.Domain.Services;
 
-public abstract class ProcessorBase<TResponse,TQuestionType> 
-    where TResponse : class 
+public abstract class ProcessorBase<TResponse,TQuestionType> : IProcessorBase where TResponse : class 
     where TQuestionType: Question
 {
     private readonly IAiEngineFactory _aiEngineFactory;
@@ -54,7 +54,9 @@ public abstract class ProcessorBase<TResponse,TQuestionType>
         throw new ApplicationException("tag9862654");
     }
 
-    protected static string Serialize<T>(T obj)
+    public abstract Task<WordAnswer?> LoadAnswer(string word);
+
+	protected static string Serialize<T>(T obj)
     {
         return JsonSerializer.Serialize(obj);
     }

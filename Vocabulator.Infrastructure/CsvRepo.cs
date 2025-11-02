@@ -60,12 +60,12 @@ public class CsvRepo : ICsvRepo
 		var sb = new StringBuilder();
 
 		// Header
-		sb.AppendLine(string.Join("\t", csvFile.ColumnDescriptions.Select(cd => QuoteIfNeeded(cd.HeaderName))));
+		sb.AppendLine(string.Join(";", csvFile.ColumnDescriptions.Select(cd => QuoteIfNeeded(cd.HeaderName))));
 
 		// Rows
 		foreach (var row in csvFile.Rows)
 		{
-			var line = string.Join("\t", row.Fields.Select(f => QuoteIfNeeded(FormatValue(f))));
+			var line = string.Join(";", row.Fields.Select(f => QuoteIfNeeded(FormatValue(f))));
 			sb.AppendLine(line);
 		}
 
@@ -217,6 +217,10 @@ public class CsvRepo : ICsvRepo
 		if (allDouble)
 			return typeof(double);
 
+		bool allGuid = values.All(v => Guid.TryParse(v, out _));
+		if (allGuid)
+			return typeof(Guid);
+
 		return typeof(string);
 	}
 
@@ -253,6 +257,11 @@ public class CsvRepo : ICsvRepo
 			return double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out var d) ? d : 0.0;
 		}
 
+		if (type == typeof(Guid))
+		{
+			return Guid.TryParse(value, out var d) ? d : Guid.NewGuid();
+		}
+
 		return value;
 	}
 
@@ -262,6 +271,7 @@ public class CsvRepo : ICsvRepo
 		if (value is bool b) return b ? "true" : "false";
 		if (value is double d) return d.ToString(CultureInfo.InvariantCulture);
 		if (value is int i) return i.ToString(CultureInfo.InvariantCulture);
+		if (value is Guid g) return g.ToString();
 		return EscapeString(value as string);
 	}
 

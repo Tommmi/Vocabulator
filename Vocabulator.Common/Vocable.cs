@@ -1,3 +1,3 @@
 ﻿namespace Vocabulator.Common;
 
-public record Vocable(Sentence Left, Sentence Right);
+public record Vocable(Guid Guid, Sentence Left, Sentence Right);

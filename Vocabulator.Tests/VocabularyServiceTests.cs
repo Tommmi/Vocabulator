@@ -29,12 +29,8 @@ public class VocabularyServiceTests
 	public async Task TryLoadAsync_FileDoesNotExist_ReturnsNull()
 	{
 		var csvRepo = new CsvRepo();
-		var columnDescriptions = new List<CsvColumnDescription>
-		{
-			new("German", typeof(string)),
-			new("English", typeof(string))
-		};
-		var service = new VocabularyService("nonexistent.csv", columnDescriptions, csvRepo, 1);
+		var columnDescriptions = CsvColumnDescriptions;
+		var service = new VocabularyService("nonexistent.csv", columnDescriptions, csvRepo);
 
 		var result = await service.TryLoadAsync();
 
@@ -45,29 +41,29 @@ public class VocabularyServiceTests
 	public async Task SaveAsync_CreatesFileWithCorrectContent()
 	{
 		var csvRepo = new CsvRepo();
-		var columnDescriptions = new List<CsvColumnDescription>
-		{
-			new("German", typeof(string)),
-			new("English", typeof(string))
-		};
-		var service = new VocabularyService(_testFilePath, columnDescriptions, csvRepo, 1);
+		var columnDescriptions = CsvColumnDescriptions;
+		var service = new VocabularyService(_testFilePath, columnDescriptions, csvRepo);
 
 		var vocables = new List<Vocable>
 		{
 			new Vocable(
-				Left: new Sentence("Hallo", [], false),
-				Right: new Sentence("Hello", [], true)),
+				Guid: Guid.NewGuid(),
+				Left: new Sentence("Hallo", [], true),
+				Right: new Sentence("Hello", [], false)),
 			new Vocable(
-				Left: new Sentence("Welt", [], false),
-				Right: new Sentence("World", [], true))
+				Guid: Guid.NewGuid(),
+				Left: new Sentence("Welt", [], true),
+				Right: new Sentence("World", [], false))
 		};
 
 		await service.SaveAsync(vocables);
 
 		Assert.IsTrue(File.Exists(_testFilePath));
 		var content = await File.ReadAllTextAsync(_testFilePath);
-		Assert.IsTrue(content.Contains("German"));
-		Assert.IsTrue(content.Contains("English"));
+		Assert.IsTrue(content.Contains("ID"));
+		Assert.IsTrue(content.Contains("Key"));
+		Assert.IsTrue(content.Contains("Translation"));
+		Assert.IsTrue(content.Contains("KeyIsMotherLanguage"));
 		Assert.IsTrue(content.Contains("Hallo"));
 		Assert.IsTrue(content.Contains("Hello"));
 		Assert.IsTrue(content.Contains("Welt"));
@@ -78,21 +74,19 @@ public class VocabularyServiceTests
 	public async Task TryLoadAsync_LoadsPreviouslySavedVocables()
 	{
 		var csvRepo = new CsvRepo();
-		var columnDescriptions = new List<CsvColumnDescription>
-		{
-			new("German", typeof(string)),
-			new("English", typeof(string))
-		};
-		var service = new VocabularyService(_testFilePath, columnDescriptions, csvRepo, 1);
+		var columnDescriptions = CsvColumnDescriptions;
+		var service = new VocabularyService(_testFilePath, columnDescriptions, csvRepo);
 
 		var originalVocables = new List<Vocable>
 		{
 			new Vocable(
-				Left: new Sentence("Guten Tag", [], false),
-				Right: new Sentence("Good day", [], true)),
+				Guid: Guid.NewGuid(),
+				Left: new Sentence("Guten Tag", [], true),
+				Right: new Sentence("Good day", [], false)),
 			new Vocable(
-				Left: new Sentence("Auf Wiedersehen", [], false),
-				Right: new Sentence("Goodbye", [], true))
+				Guid: Guid.NewGuid(),
+				Left: new Sentence("Auf Wiedersehen", [], true),
+				Right: new Sentence("Goodbye", [], false))
 		};
 
 		await service.SaveAsync(originalVocables);
@@ -111,18 +105,15 @@ public class VocabularyServiceTests
 	public async Task TryLoadAsync_ParsesWordsFromForeignLanguage()
 	{
 		var csvRepo = new CsvRepo();
-		var columnDescriptions = new List<CsvColumnDescription>
-		{
-			new("German", typeof(string)),
-			new("English", typeof(string))
-		};
-		var service = new VocabularyService(_testFilePath, columnDescriptions, csvRepo, foreignLanguageColumnNumber: 1);
+		var columnDescriptions = CsvColumnDescriptions;
+		var service = new VocabularyService(_testFilePath, columnDescriptions, csvRepo);
 
 		var vocables = new List<Vocable>
 		{
 			new Vocable(
-				Left: new Sentence("das Haus", [], false),
-				Right: new Sentence("the house", [], true))
+				Guid: Guid.NewGuid(),
+				Left: new Sentence("das Haus", [], true),
+				Right: new Sentence("the house", [], false))
 		};
 
 		await service.SaveAsync(vocables);
@@ -140,36 +131,56 @@ public class VocabularyServiceTests
 	public async Task SaveAndLoad_MultipleVocables_PreservesData()
 	{
 		var csvRepo = new CsvRepo();
-		var columnDescriptions = new List<CsvColumnDescription>
-		{
-			new("German", typeof(string)),
-			new("English", typeof(string))
-		};
-		var service = new VocabularyService(_testFilePath, columnDescriptions, csvRepo, 1);
+		var columnDescriptions = CsvColumnDescriptions;
+		var service = new VocabularyService(_testFilePath, columnDescriptions, csvRepo);
 
 		var vocables = new List<Vocable>
 		{
 			new Vocable(
-				Left: new Sentence("Ich lerne Deutsch", [], false),
-				Right: new Sentence("I learn German", [], true)),
+				Guid: Guid.NewGuid(),
+				Left: new Sentence("Ich lerne Deutsch", [], true),
+				Right: new Sentence("I learn German", [], false)),
 			new Vocable(
-				Left: new Sentence("Du sprichst Englisch", [], false),
-				Right: new Sentence("You speak English", [], true)),
+				Guid: Guid.NewGuid(),
+				Left: new Sentence("Du sprichst Englisch", [], true),
+				Right: new Sentence("You speak English", [], false)),
 			new Vocable(
-				Left: new Sentence("Er hat ein Auto", [], false),
-				Right: new Sentence("He has a car", [], true))
+				Guid: Guid.NewGuid(),
+				Left: new Sentence("Er hat ein Auto", [], true),
+				Right: new Sentence("He has a car", [], false)),
+			new Vocable(
+				Guid: Guid.NewGuid(),
+				Left: new Sentence("car", [], false),
+				Right: new Sentence("Auto", [], true)),
 		};
 
 		await service.SaveAsync(vocables);
 		var loadedVocables = await service.TryLoadAsync();
 
 		Assert.IsNotNull(loadedVocables);
-		Assert.AreEqual(3, loadedVocables.Count);
+		Assert.AreEqual(4, loadedVocables.Count);
 		
 		for (int i = 0; i < vocables.Count; i++)
 		{
 			Assert.AreEqual(vocables[i].Left.Content, loadedVocables[i].Left.Content);
 			Assert.AreEqual(vocables[i].Right.Content, loadedVocables[i].Right.Content);
+			Assert.AreEqual(vocables[i].Left.IsMotherLanguage, loadedVocables[i].Left.IsMotherLanguage);
+			Assert.AreEqual(vocables[i].Right.IsMotherLanguage, loadedVocables[i].Right.IsMotherLanguage);
+		}
+	}
+
+	private static List<CsvColumnDescription> CsvColumnDescriptions
+	{
+		get
+		{
+			var columnDescriptions = new List<CsvColumnDescription>
+			{
+				new ("ID", typeof(Guid)),
+				new ("Key", typeof(string)),
+				new ("Translation", typeof(string)),
+				new ("KeyIsMotherLanguage", typeof(bool)),
+			};
+			return columnDescriptions;
 		}
 	}
 }
