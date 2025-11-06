@@ -2,7 +2,7 @@
   "profiles": {
     "Vocabulator": {
       "commandName": "Project",
-      "commandLineArgs": "--word \"make\" --isWordInMotherLanguage false --csvFilePath \"C:\\TMP\\DebugTest\\test.csv\" --automatic true"
+      "commandLineArgs": "--csvFilePath \"C:\\TMP\\DebugTest\\test.csv\"  --myLanguage German --foreignLanguage English"
     }
   }
 }

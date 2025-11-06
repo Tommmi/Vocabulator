@@ -18,19 +18,54 @@ namespace Vocabulator
             Parser.Default.ParseArguments<Options>(args)
                 .WithParsed(options =>
                 {
+                    if(!ValidateOptions(options))
+                    {
+                        return;
+                    }
+
                     Process(options, config).Wait();
                 });
+        }
+
+        private static bool ValidateOptions(Options options)
+        {
+	        if(options.Words != null)
+	        {
+                if(options.IsWordInMotherLanguage == null)
+                {
+                    Console.WriteLine($"if 'word' is used, you must set parameter 'isWordInMotherLanguage'");
+                    return false;
+				}
+				if(options.WordFilePath != null)
+				{
+					Console.WriteLine($"if 'word' is used, you may not use parameter 'wordFilePath'");
+					return false;
+				}
+			}
+
+            return true;
         }
 
         private static async Task Process(Options options, Config config)
         {
             bool isWordInMotherLanguage = options.IsWordInMotherLanguage ?? false;
-            string? word = options.Word;
+
+			if(!TryGetWords(options, out var words))
+			{
+				return;
+			}
+
             string csvFilePath = options.CsvFilePath!;
-            bool automatic = options.Automatic ?? false;
 
             var csvRepo = new CsvRepo();
             var sortService = new VocabularySortService();
+
+            if (IsFileLocked(csvFilePath))
+            {
+                Console.WriteLine($"file {csvFilePath} ist geöffnet. Bitte schließen!");
+                return;
+            }
+
 
 			var openAiFactory = new AiEngineFactory(openApiKey: config.ApiKey);
             if(options.QuestionFilePath == null)
@@ -46,6 +81,7 @@ namespace Vocabulator
 		            new (HeaderName:"Key", ColumnType:typeof(string)),
 		            new (HeaderName:"Translation", ColumnType:typeof(string)),
 		            new (HeaderName:"KeyIsMotherLanguage", ColumnType:typeof(bool)),
+		            new (HeaderName:"New Words", ColumnType:typeof(string)),
 				},
 	            csvRepo: csvRepo);
 
@@ -55,65 +91,115 @@ namespace Vocabulator
 	            loadedVocabulary = new List<Vocable>();
             }
 
-            var processorEnglishGerman4Germans = new Processor4EnglishGerman4Germans(openAiFactory, questionFilePath: options.QuestionFilePath);
-	        var processorGermanEnglish4Germans = new Processor4GermanEnglish4Germans(openAiFactory, questionFilePath: options.QuestionFilePath);
-
-
-            if(word != null)
+            if(words.Any())
             {
-	            IProcessorBase processor = isWordInMotherLanguage ? processorGermanEnglish4Germans : processorEnglishGerman4Germans;
+	            if (!TryGetProcessor(options, openAiFactory, isWordInMotherLanguage, out var processor))
+	            {
+		            return;
+	            }
 
-	            loadedVocabulary = await AddWord(word, isWordInMotherLanguage,processor, vocabularyService, sortService, loadedVocabulary);
-            }
-
-            if(automatic)
-            {
-                var cancellationTokenSource = new CancellationTokenSource();
-                var cancellationToken = cancellationTokenSource.Token;
-
-                var task = Task.Run(async () =>
-                {
-                    while(!cancellationToken.IsCancellationRequested)
-                    {
-	                    var unknownWord = sortService.TryFindUntranslatedWord(loadedVocabulary);
-
-	                    if (unknownWord.HasValue)
-	                    {
-		                    string untranslatedWord = unknownWord.Value.word.Token;
-
-		                    loadedVocabulary = await AddWord(
-			                    untranslatedWord,
-			                    isWordInMotherLanguage: false,
-			                    processorEnglishGerman4Germans,
-			                    vocabularyService,
-			                    sortService,
-			                    loadedVocabulary);
-	                    }
-                    }
-				});
-
-                while(!task.IsCompleted)
-                {
-                    if(Console.KeyAvailable && !cancellationTokenSource.IsCancellationRequested)
-                    {
-                        while(Console.KeyAvailable)
-                        {
-	                        _ = Console.ReadKey(intercept: false);
-						}
-
-                        cancellationTokenSource.Cancel();
-                        Console.WriteLine("Key pressed. Stopping process ...");
-					}
-                    await Task.Delay(TimeSpan.FromSeconds(1));
-                }
-
-				Console.WriteLine("... process stopped");
-
-
+				foreach(var word in words)
+				{
+					loadedVocabulary = await AddWord(word, isWordInMotherLanguage, processor!, vocabularyService, sortService, loadedVocabulary);
+				}
+			}
+			else
+			{
+				loadedVocabulary = sortService.Sort(loadedVocabulary);
+				await vocabularyService.SaveAsync(loadedVocabulary);
 			}
 		}
 
-        private static async Task<List<Vocable>> AddWord(
+        private static bool TryGetWords(Options options, out string[] words)
+        {
+			words = [];
+			if (options.Words != null)
+			{
+				words = options.Words.Split([';','|'],StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+			}
+			else if(options.WordFilePath != null)
+			{
+				if(!File.Exists(options.WordFilePath))
+				{
+					Console.WriteLine($"file doese not exist {options.WordFilePath}");
+					return false;
+				}
+
+				string fileContent;
+
+				if (IsFileLocked(options.WordFilePath))
+				{
+					Console.WriteLine($"file {options.WordFilePath} ist geöffnet. Bitte schließen!");
+					return false;
+				}
+
+				fileContent = File.ReadAllText(options.WordFilePath);
+
+				words = fileContent.Split(['\n', '\r'], StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+			}
+
+			return true;
+        }
+
+        private static bool TryGetProcessor(
+	        Options options, 
+	        AiEngineFactory openAiFactory, 
+	        bool isWordInMotherLanguage,
+	        out IProcessorBase? processor)
+        {
+	        var processorEnglishGerman4Germans = new Processor4EnglishGerman4Germans(openAiFactory, questionFilePath: options.QuestionFilePath!);
+	        var processorGermanEnglish4Germans = new Processor4GermanEnglish4Germans(openAiFactory, questionFilePath: options.QuestionFilePath!);
+
+	        switch (options.MyLanguage)
+	        {
+		        case "German":
+			        switch(options.ForeignLanguage)
+			        {
+				        case "English":
+					        processor = isWordInMotherLanguage ? processorGermanEnglish4Germans : processorEnglishGerman4Germans;
+					        break;
+				        case "Brazilian":
+					        throw new ArgumentException();
+				        default:
+					        Console.WriteLine($"foreign language {options.ForeignLanguage} is not supported!");
+					        processor = null;
+					        return false;
+			        }
+			        break;
+		        case "English":
+			        throw new ArgumentException();
+		        case "Brazilian":
+			        throw new ArgumentException();
+		        default:
+			        Console.WriteLine($"mother language {options.MyLanguage} is not supported!");
+			        processor = null;
+			        return false;
+	        }
+
+	        return true;
+        }
+
+        private static bool IsFileLocked(string path)
+        {
+	        try
+	        {
+		        using var stream = new FileStream(
+			        path,
+			        FileMode.Open,
+			        FileAccess.ReadWrite,
+			        FileShare.None // exklusiver Zugriff
+		        );
+		        return false; // kein Fehler → Datei ist NICHT gesperrt
+	        }
+	        catch (IOException)
+	        {
+		        return true; // IOException → Datei wird gerade verwendet
+	        }
+        }
+
+
+
+		private static async Task<List<Vocable>> AddWord(
 	        string word, 
             bool isWordInMotherLanguage,
 	        IProcessorBase processor, 

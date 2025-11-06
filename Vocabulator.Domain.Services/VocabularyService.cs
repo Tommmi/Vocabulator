@@ -48,7 +48,8 @@ namespace Vocabulator.Domain.Services
 				new Vocable(
 					Guid: (Guid)row.Fields[_colNbGuid],
 					Left: CreateSentence(row, _colNbLeft),
-					Right: CreateSentence(row, _colNbRight))
+					Right: CreateSentence(row, _colNbRight),
+					NewWords: [])
 				)
 				.ToList();
 			return vocables;
@@ -71,7 +72,8 @@ namespace Vocabulator.Domain.Services
 			return new Vocable(
 				Guid: Guid.NewGuid(),
 				Left: CreateSentence(leftSentence, isMotherLanguage: isLeftMotherLanguage),
-				Right: CreateSentence(rightSentence, isMotherLanguage: !isLeftMotherLanguage));
+				Right: CreateSentence(rightSentence, isMotherLanguage: !isLeftMotherLanguage),
+				NewWords: []);
 		}
 
 		private Sentence CreateSentence(string sentence, bool isMotherLanguage)
@@ -89,7 +91,12 @@ namespace Vocabulator.Domain.Services
 					columnDescriptions: _columnDescriptions,
 					rows: vocables
 						.Select(v => new CsvRow(
-							fields: [v.Guid, v.Left.Content, v.Right.Content, v.Left.IsMotherLanguage]))
+							fields: [ 
+								v.Guid, 
+								v.Left.Content, 
+								v.Right.Content, 
+								v.Left.IsMotherLanguage, 
+								string.Join('|',v.NewWords.Select(w=>w.Token))]))
 						.ToList()
 				),
 				filePath: _filepath);

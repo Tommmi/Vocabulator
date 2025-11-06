@@ -60,8 +60,15 @@ namespace Vocabulator.Domain.Services
 				var sentence = GetForeignSentence(vocable);
 				targetList.Add(vocable);
 
+				vocable.NewWords.Clear();
+
 				foreach (var word in sentence.Words)
 				{
+					bool isKnown = knownWords.Contains(word);
+					if(!isKnown)
+					{
+						vocable.NewWords.Add(word);
+					}
 					knownWords.Add(word);
 				}
 

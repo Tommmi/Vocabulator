@@ -49,11 +49,13 @@ public class VocabularyServiceTests
 			new Vocable(
 				Guid: Guid.NewGuid(),
 				Left: new Sentence("Hallo", [], true),
-				Right: new Sentence("Hello", [], false)),
+				Right: new Sentence("Hello", [], false),
+				NewWords:[]),
 			new Vocable(
 				Guid: Guid.NewGuid(),
 				Left: new Sentence("Welt", [], true),
-				Right: new Sentence("World", [], false))
+				Right: new Sentence("World", [], false),
+				NewWords:[])
 		};
 
 		await service.SaveAsync(vocables);
@@ -82,11 +84,13 @@ public class VocabularyServiceTests
 			new Vocable(
 				Guid: Guid.NewGuid(),
 				Left: new Sentence("Guten Tag", [], true),
-				Right: new Sentence("Good day", [], false)),
+				Right: new Sentence("Good day", [], false),
+				NewWords:[]),
 			new Vocable(
 				Guid: Guid.NewGuid(),
 				Left: new Sentence("Auf Wiedersehen", [], true),
-				Right: new Sentence("Goodbye", [], false))
+				Right: new Sentence("Goodbye", [], false),
+				NewWords:[])
 		};
 
 		await service.SaveAsync(originalVocables);
@@ -113,7 +117,8 @@ public class VocabularyServiceTests
 			new Vocable(
 				Guid: Guid.NewGuid(),
 				Left: new Sentence("das Haus", [], true),
-				Right: new Sentence("the house", [], false))
+				Right: new Sentence("the house", [], false),
+				NewWords:[])
 		};
 
 		await service.SaveAsync(vocables);
@@ -139,19 +144,23 @@ public class VocabularyServiceTests
 			new Vocable(
 				Guid: Guid.NewGuid(),
 				Left: new Sentence("Ich lerne Deutsch", [], true),
-				Right: new Sentence("I learn German", [], false)),
+				Right: new Sentence("I learn German", [], false),
+				NewWords:[]),
 			new Vocable(
 				Guid: Guid.NewGuid(),
 				Left: new Sentence("Du sprichst Englisch", [], true),
-				Right: new Sentence("You speak English", [], false)),
+				Right: new Sentence("You speak English", [], false),
+				NewWords:[]),
 			new Vocable(
 				Guid: Guid.NewGuid(),
 				Left: new Sentence("Er hat ein Auto", [], true),
-				Right: new Sentence("He has a car", [], false)),
+				Right: new Sentence("He has a car", [], false),
+				NewWords:[]),
 			new Vocable(
 				Guid: Guid.NewGuid(),
 				Left: new Sentence("car", [], false),
-				Right: new Sentence("Auto", [], true)),
+				Right: new Sentence("Auto", [], true),
+				NewWords:[]),
 		};
 
 		await service.SaveAsync(vocables);
@@ -179,6 +188,7 @@ public class VocabularyServiceTests
 				new ("Key", typeof(string)),
 				new ("Translation", typeof(string)),
 				new ("KeyIsMotherLanguage", typeof(bool)),
+				new ("New Words", typeof(string)),
 			};
 			return columnDescriptions;
 		}

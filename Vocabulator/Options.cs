@@ -6,14 +6,17 @@ internal class Options
 {
 	[Option('q', "question", Required = false, HelpText = "filepath to question", Default = ".\\question.txt")]
 	public string? QuestionFilePath { get; set; }
-	[Option('w', "word", Required = false, HelpText = "word to be translated", Default = null)]
-	public string? Word { get; set; }
-	[Option('m', "isWordInMotherLanguage", Required = true, HelpText = "true, if word is in mother language")]
+	[Option('w', "words", Required = false, HelpText = "words to be translated, separated by ; or |", Default = null)]
+	public string? Words { get; set; }
+	[Option('m', "isWordInMotherLanguage", Required = false, HelpText = "true, if word is in mother language")]
 	public bool? IsWordInMotherLanguage { get; set; }
+	[Option('f', "wordFilePath", Required = false, HelpText = "file path to file of words")]
+	public string? WordFilePath { get; set; }
 	[Option('f', "csvFilePath", Required = true, HelpText = "file path to csv file. May still not exist.")]
 	public string? CsvFilePath { get; set; }
-	[Option('a', "automatic", Required = false, HelpText = "true, if program looks for words automatically", Default = false)]
-	public bool? Automatic { get; set; }
-
+	[Option('l', "myLanguage", Required = true, HelpText = "what's my language ('english','german','brazilian')")]
+	public string? MyLanguage { get; set; }
+	[Option('f', "foreignLanguage", Required = true, HelpText = "what's the foreign language ('english','german','brazilian')")]
+	public string? ForeignLanguage { get; set; }
 
 }
