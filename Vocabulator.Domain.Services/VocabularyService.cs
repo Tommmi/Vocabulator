@@ -123,7 +123,7 @@ namespace Vocabulator.Domain.Services
 			}
 		}
 
-		private static List<string> ExtractWords(string input)
+		public static List<string> ExtractWords(string input)
 		{ 
 			if (string.IsNullOrWhiteSpace(input))
 				return new List<string>();

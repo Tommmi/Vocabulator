@@ -5,6 +5,7 @@ using Vocabulator.Common.Csv;
 using Vocabulator.Domain.Interface;
 using Vocabulator.Domain.Services;
 using Vocabulator.Domain.Services.QuestionTypes.English4Germans;
+using Vocabulator.Domain.Services.QuestionTypes.Germans4English;
 using Vocabulator.Infrastructure;
 
 namespace Vocabulator
@@ -108,10 +109,31 @@ namespace Vocabulator
 		            return;
 	            }
 
-				foreach(var word in words)
+				await DoInteruptable(action: async cancellationToken =>
 				{
-					loadedVocabulary = await AddWord(word, isWordInMotherLanguage, processor!, vocabularyService, sortService, loadedVocabulary);
-				}
+					foreach (var word in words.ToList())
+					{
+						if (cancellationToken.IsCancellationRequested)
+						{
+							break;
+						}
+
+						if(IsWordAllreadyUsed(word, loadedVocabulary))
+						{
+							words = RemoveWord(options, words, word);
+							continue;
+						}
+
+						var result = await TryAddWord(word, isWordInMotherLanguage, processor!, vocabularyService, sortService, loadedVocabulary);
+
+						if (result.succeeded)
+						{
+							loadedVocabulary = result.loadedVocabulary;
+							words = RemoveWord(options, words, word);
+						}
+					}
+				});
+
 			}
 			else
 			{
@@ -120,7 +142,59 @@ namespace Vocabulator
 			}
 		}
 
-        private static bool TryGetWords(Options options, out string[] words)
+        private static bool IsWordAllreadyUsed(string word, List<Vocable> loadedVocabulary)
+        {
+			word = word.ToLower();
+			foreach(var vocable in loadedVocabulary)
+			{
+				var words = VocabularyService.ExtractWords(vocable.Left.Content);
+				if (words.Count == 1 && words.First().ToLower() == word)
+				{
+					return true;
+				}
+			}
+
+			return false;
+        }
+
+        private static string[] RemoveWord(Options options, string[] words, string word)
+        {
+	        var wordList = words.ToList();
+	        wordList.Remove(word);
+	        words = wordList.ToArray();
+	        SaveWords(options, words);
+	        return words;
+        }
+
+
+        private static async Task DoInteruptable(Func<CancellationToken,Task> action)
+		{
+			var cancellationTokenSource = new CancellationTokenSource();
+			var cancellationToken = cancellationTokenSource.Token;
+
+			var task = Task.Run(async () =>
+			{
+				await action(cancellationToken);
+			});
+
+			while (!task.IsCompleted)
+			{
+				if (Console.KeyAvailable && !cancellationToken.IsCancellationRequested)
+				{
+					while (Console.KeyAvailable)
+					{
+						Console.ReadKey(intercept: true);
+					}
+					Console.WriteLine("stopping ...");
+					cancellationTokenSource.Cancel();
+				}
+
+				await Task.Delay(100);
+			}
+		}
+
+
+		private static bool TryGetWords(Options options, out string[] words)
         {
 			words = [];
 			if (options.Words != null)
@@ -151,6 +225,15 @@ namespace Vocabulator
 			return true;
         }
 
+		private static void SaveWords(Options options, string[] words)
+		{
+			if (options.WordFilePath != null)
+			{
+				File.WriteAllText(options.WordFilePath, contents:string.Join('\n',words));
+			}
+		}
+
+
         private static bool TryGetProcessor(
 	        Options options, 
 	        AiEngineFactory openAiFactory, 
@@ -159,8 +242,10 @@ namespace Vocabulator
         {
 	        var processorEnglishGerman4Germans = new Processor4EnglishGerman4Germans(openAiFactory, questionFilePath: options.QuestionFilePath!);
 	        var processorGermanEnglish4Germans = new Processor4GermanEnglish4Germans(openAiFactory, questionFilePath: options.QuestionFilePath!);
+	        var processorEnglishGerman4English = new Processor4EnglishGerman4English(openAiFactory, questionFilePath: options.QuestionFilePath!);
+	        var processorGermanEnglish4English = new Processor4GermanEnglish4English(openAiFactory, questionFilePath: options.QuestionFilePath!);
 
-	        switch (options.MyLanguage)
+			switch (options.MyLanguage)
 	        {
 		        case "German":
 			        switch(options.ForeignLanguage)
@@ -177,7 +262,19 @@ namespace Vocabulator
 			        }
 			        break;
 		        case "English":
-			        throw new ArgumentException();
+			        switch (options.ForeignLanguage)
+			        {
+				        case "German":
+					        processor = isWordInMotherLanguage ? processorEnglishGerman4English : processorGermanEnglish4English;
+							break;
+				        case "Brazilian":
+					        throw new ArgumentException();
+				        default:
+					        Console.WriteLine($"foreign language {options.ForeignLanguage} is not supported!");
+					        processor = null;
+					        return false;
+			        }
+			        break;
 		        case "Brazilian":
 			        throw new ArgumentException();
 		        default:
@@ -214,7 +311,7 @@ namespace Vocabulator
 
 
 
-		private static async Task<List<Vocable>> AddWord(
+		private static async Task<(bool succeeded, List<Vocable> loadedVocabulary)> TryAddWord(
 	        string word, 
             bool isWordInMotherLanguage,
 	        IProcessorBase processor, 
@@ -252,14 +349,14 @@ namespace Vocabulator
 
 				loadedVocabulary = sortService.Sort(loadedVocabulary);
 		        await vocabularyService.SaveAsync(loadedVocabulary);
+		        return (succeeded: true, loadedVocabulary);
 	        }
-	        else
+			else
 	        {
-		        Console.WriteLine("can't find answer");
+		        Console.WriteLine($"can't find answer {word}");
+		        return (succeeded: false, loadedVocabulary);
 	        }
-
-	        return loadedVocabulary;
-        }
+		}
 
         private static Config ReadConfig()
         {

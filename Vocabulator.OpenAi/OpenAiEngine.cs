@@ -20,28 +20,33 @@ namespace Vocabulator.OpenAi
 
         public async Task<TResponse?> DoRequest(Question question)
         {
-            ValidateQuestion(question);
-
-            var inputText = question.Text;
-
-            string? responseString;
-
-
-			using (var client = new HttpClient())
+            try
             {
-	            client.Timeout = TimeSpan.FromMinutes(5);
-	            responseString = await TryCallOpenAi(client, _openApiKey, inputText);
+	            ValidateQuestion(question);
+
+	            var inputText = question.Text;
+
+	            string? responseString;
+
+
+	            using (var client = new HttpClient())
+	            {
+		            client.Timeout = TimeSpan.FromMinutes(5);
+		            responseString = await TryCallOpenAi(client, _openApiKey, inputText);
+	            }
+
+	            OpenAiResponse? openAiResponse = DeserializeOpenAiResponse(responseString);
+
+	            string? json = ExtractLastJson(openAiResponse?.Choices?.FirstOrDefault()?.Message?.Content);
+
+	            return DeserializeJsonAnswer(json);
             }
-               
-
-            var json = ExtractLastJson(responseString);
-
-            OpenAiResponse? openAiResponse = DeserializeOpenAiResponse(json);
-            
-            json = ExtractLastJson(openAiResponse?.Choices?.FirstOrDefault()?.Message?.Content);
-
-			return DeserializeJsonAnswer(json);
-        }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"ERROR word: {question.Parameters.First().Value}, exception: {ex.GetType().Name} - {ex.Message}");
+                return null;
+            }
+		}
 
         private OpenAiResponse? DeserializeOpenAiResponse(string? resultText)
         {
@@ -100,8 +105,10 @@ namespace Vocabulator.OpenAi
 		        return null;
 
 	        string lastJsonCandidate = matches[^1].Value.Trim();
+	        
 
-	        try
+
+			try
 	        {
 		        using var doc = JsonDocument.Parse(lastJsonCandidate);
 		        return doc.RootElement.GetRawText();
@@ -140,7 +147,7 @@ namespace Vocabulator.OpenAi
             {
 	            model = "gpt-5-mini",
 	            stream = false,                 // oder true, siehe unten
-	            reasoning_effort = "minimal",   // "minimal" | "low" | "medium" | "high"
+	            reasoning_effort = "low",   // "minimal" | "low" | "medium" | "high"
 	            verbosity = "low",              // optional: "low" | "medium" | "high"
 	            messages = new[]
 	            {
