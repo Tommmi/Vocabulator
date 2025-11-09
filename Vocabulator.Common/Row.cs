@@ -17,7 +17,7 @@ namespace Vocabulator.Common
 		public string? TranslatedExample { get; set; }
 		[JsonPropertyName("explanation")]
 		public string? Explanation { get; set; }
-		[JsonPropertyName("alternative-translation")]
-		public string? AlternativeTranslation { get; set; }
+		[JsonPropertyName("alternative-translations")]
+		public string[]? AlternativeTranslations { get; set; }
 	}
 }

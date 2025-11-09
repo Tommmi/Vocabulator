@@ -1,49 +1,63 @@
-﻿1. Der PARAM(deutsche)PARAM Begriff heißt "PARAM(WORD)PARAM"
+﻿1. Der PARAM(deutsche)PARAM Begriff heißt "PARAM(WORD)PARAM".
+   Es geht AUSSCHLIESSLICH um genau dieses Wort in dieser Schreibweise:
+   - ggf. mit großem Anfangsbuchstaben am Satzanfang
+   - KEINE flektierten Formen ( Zum Beipiel: wäre der Begriff "kreativ", dürfen also keine flektierten Formen wie "kreative", "kreatives", "kreativen", "kreativer", "kreativem" usw. verwendet werden)
+   - Ableitungen sind NICHT Teil der Analyse (Zum Beipiel: wäre der Begriff "kreativ", dürfen also keine abgeleiteten Formen wie "Kreativität", usw. berücksichtigt werden, sondern nur der Begriff in genau dieser Schreibweise)
 
-2. Analysiere ALLE unterschiedlichen Verwendungsweisen dieses Begriffs:
-   - lexikalische Bedeutungen (Wortebene)
-   - grammatische Funktionen (z. B. Konjunktion, Adverb)
-   - idiomatische oder feste Wendungen (z. B. „wie nennt man“, „wie auch immer“, „so wie“)
-   - pragmatische Sonderfälle, in denen sich die Übersetzung stark ändert.
+   Unterschiedliche grammatikalische Flexionen müssen berücksichtigt werden, wenn sie genau so geschrieben werden ( Zum Beispiel: wäre der Begriff "kreativ", darf der Begriff sowohl als Adjektiv ("Er ist kreativ.") als auch adverbial ("Er arbeitet kreativ.") verwendet werden, aber immer exakt in der Form "kreativ".)
+2. Analysiere ALLE unterschiedlichen Verwendungsweisen von "PARAM(WORD)PARAM" in genau dieser Form:
+   - lexikalische Bedeutungen (Wortebene, Eigenschaft / Art und Weise)
+   - grammatische Funktionen (z. B. prädikativ, adverbialer Gebrauch)
+   - idiomatische oder feste Wendungen, in denen genau das Wort "PARAM(WORD)PARAM" vorkommt
+   - pragmatische Sonderfälle, in denen sich die Übersetzung stark ändert,
+     aber immer direkt auf das Wort "PARAM(WORD)PARAM" zurückgeht.
 
-3. Gib für jede dieser Bedeutungen oder Verwendungen eine kurze Beschreibung des jeweiligen Kontexts (z. B. Fragewort, Vergleich, Redewendung, Formel, etc.) aus.
+3. Gib für jede dieser Bedeutungen oder Verwendungen eine kurze Beschreibung des jeweiligen Kontexts
+   (z. B. Juristik, Kunst, Bildung, Arbeit, ironische Verwendung, fachsprachliche Verwendung, usw.).
 
 4. Iteriere jetzt über alle Bedeutungen/Kontexte und überlege jeweils:
-   - Welche PARAM(englische)PARAMn Übersetzungsmöglichkeiten gibt es?
-   - Berücksichtige dabei, dass manche Übersetzungen **nicht wörtlich**, sondern **funktional oder idiomatisch** erfolgen (z. B. „Wie nennt man…?“ → „What do you call…?“).
-   - Nenne auch seltenere oder spezifische Übersetzungen, wenn sie notwendig sind, um alle Bedeutungen korrekt abzudecken.
+   - Welche englischen Übersetzungsmöglichkeiten gibt es?
+   - Berücksichtige dabei, dass manche Übersetzungen nicht wörtlich,
+     sondern funktional oder idiomatisch erfolgen können
+     (Zum Beipiel: wäre der Begriff "wie",  würde "Wie nennt man …?" mit "What do you call …?" übersetzt werden und nicht mit "How do you call that?")
 
-5. Fasse dann eine Liste der **Minimalübersetzungen** zusammen:
-   - Nur die kleinste Menge PARAM(englische)PARAMr Übersetzungen, die alle Bedeutungen und Kontexte korrekt abdecken.
-   - Wenn eine Übersetzung in mehreren Bedeutungen funktioniert, verwende ausschließlich diese und vermeide überflüssige Synonyme.
+   WICHTIG:
+   - Es dürfen nur Übersetzungen aufgenommen werden, die direkt das PARAM(deutsche)PARAM "PARAM(WORD)PARAM"
+     (in dieser Form) wiedergeben.
+
+5. Fasse dann eine Liste der Minimalübersetzungen zusammen:
+   - Nur die kleinste Menge englischer Übersetzungen, die alle Bedeutungen und Kontexte
+     des Wortes "PARAM(WORD)PARAM" in genau dieser Form korrekt abdecken.
+   - Wenn eine Übersetzung in mehreren Bedeutungen funktioniert, verwende ausschließlich diese
+     und vermeide überflüssige Synonyme.
 
 6. Gib eine Tabelle mit folgenden Spalten aus:
-   a) PARAM(deutsche)PARAMr Begriff  
+   a) PARAM(deutsche)PARAMr Begriff "PARAM(WORD)PARAM" 
    b) PARAM(englische)PARAM Übersetzung (Minimalform)  
-   c) verknüpfter Kontext/Bedeutung oder typische Situation (Kontext in PARAM(Muttersprache)PARAMer Sprache hier schreiben)
-   d) extrem kurzer PARAM(deutsche)PARAMr Beispielausdruck (bevorzuge Infinitiv oder feste Wendung)  
+   c) verknüpfter Kontext/Bedeutung oder typische Situation (Kontext in PARAM(Muttersprache)PARAMr Sprache)  
+   d) extrem kurzer PARAM(deutsche)PARAMr Beispielausdruck, der den PARAM(deutsche)PARAMn Begriff genau in der obigen Form enthält (zum Beispiel: wäre der Begriff "kreativ", wären Beipielausdrücke wie 
+     "kreativ denken", "Sie ist sehr kreativ.", "kreativ arbeiten" erlaubt)  
    e) PARAM(englische)PARAM Übersetzung des Beispiels  
-   f) kurze PARAM(deutsche)PARAM Begründung, warum genau diese Übersetzung hier notwendig ist (Begründung in PARAM(Muttersprache)PARAMer Sprache hier schreiben)
+   f) kurze PARAM(Muttersprache)PARAM Begründung, warum genau diese Übersetzung hier notwendig ist  
    g) alternative PARAM(englische)PARAM Begriffe, die in diesem Kontext auch passen könnten  
+
+   WICHTIG:
+   - In Spalte d) MUSS das Wort "PARAM(WORD)PARAM" exakt so vorkommen (oder am Satzanfang mit Großbuchstaben).
+   - Flektierte Formen und Ableitungen sind NICHT erlaubt.
 
 7. Erstelle anschließend eine JSON-Struktur mit folgendem Aufbau:
 {
   "rows":[
     {
-      "word": "<PARAM(deutsche)PARAMr Begriff>",
-      "translation": "<PARAM(englische)PARAM Minimalübersetzung>",
-      "context": "<Beschreibung des Kontexts in PARAM(Muttersprache)PARAMer Sprache>",
-      "example": "<kurzer <PARAM(deutsche)PARAMr Ausdruck>",
-      "translated-example": "<<PARAM(englische)PARAM Übersetzung des Beispiels>",
-      "explanation": "<kurze Begründung in PARAM(Muttersprache)PARAMer Sprache>",
-      "alternative-translation": "<andere mögliche <PARAM(englische)PARAM Übersetzungen>"
+      "word": "PARAM(WORD)PARAM",
+      "translation": "<PARAM(englische)PARAM Minimalübersetzung für 'PARAM(WORD)PARAM'>",
+      "context": "<Beschreibung des Kontexts in PARAM(Muttersprache)PARAMr Sprache>",
+      "example": "<kurzer PARAM(deutsche)PARAMr Ausdruck mit genau 'PARAM(WORD)PARAM'>",
+      "translated-example": "<PARAM(englische)PARAM Übersetzung des Beispiels>",
+      "explanation": "<kurze Begründung in PARAM(Muttersprache)PARAMr Sprache>",
+      "alternative-translations": ["<andere mögliche PARAM(englische)PARAM Übersetzung>", "..."]
     },
     ...
   ]
 }
 
-8. Analysiere direkt im Anschluss deine JSON-Struktur:
-   - Prüfe, ob alle Bedeutungen wirklich abgedeckt sind.
-   - Ergänze fehlende idiomatische oder funktionale Übersetzungen (z. B. „Wie nennt man…?“ → „What do you call…?“).
-   - Korrigiere Übersetzungen, falls sie nicht präzise oder grammatisch falsch sind.
-   - Gib dann die korrigierte JSON-Struktur **ohne Kommentar** erneut vollständig aus.

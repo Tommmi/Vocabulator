@@ -13,45 +13,42 @@ namespace Vocabulator.Domain.Services
 			var remainingVocables = vocables.ToList();
 			remainingVocables.Reverse();
 
-			int oldCountTargetList;
-
 			while(remainingVocables.Count > 0)
 			{
-				ExtractRootVocables();
-
-				if(remainingVocables.Count > 0)
-				{
-					ExtractOneVocable(idxInRemainingVocables: remainingVocables.Count-1);
-				}
+				ExtractOneVocableOnly();
 			}
 
 			return targetList;
 
-			void ExtractRootVocables()
+			void ExtractOneVocableOnly()
 			{
-				ExtractRootVocablesInternal(maxSingleNewWords: 1);
-				ExtractRootVocablesInternal(maxSingleNewWords: 2);
+				int i = 1;
+				while(true)
+				{
+					if(ExtractOneVocableWithMinimum(maxSingleNewWords:i))
+					{
+						return;
+					}
+					i++;
+				}
 			}
 
-			void ExtractRootVocablesInternal(int maxSingleNewWords)
+			bool ExtractOneVocableWithMinimum(int maxSingleNewWords)
 			{
-				do
+				for (int idx = remainingVocables.Count - 1; idx >= 0; idx--)
 				{
-					oldCountTargetList = targetList.Count;
+					var vocable = remainingVocables[idx];
+					var sentence = GetForeignSentence(vocable);
+					bool isRoot = sentence.Words.Count(word => !knownWords.Contains(word)) < maxSingleNewWords + 1;
 
-					for (int idx = remainingVocables.Count - 1; idx >= 0; idx--)
+					if(isRoot)
 					{
-						var vocable = remainingVocables[idx];
-						var sentence = GetForeignSentence(vocable);
-						bool isRoot = sentence.Words.Count(word => !knownWords.Contains(word)) < maxSingleNewWords + 1;
-
-						if (isRoot)
-						{
-							ExtractOneVocable(idx);
-						}
+						ExtractOneVocable(idx);
+						return true;
 					}
 				}
-				while (targetList.Count != oldCountTargetList);
+
+				return false;
 			}
 
 			void ExtractOneVocable(int idxInRemainingVocables)

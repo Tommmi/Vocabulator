@@ -50,12 +50,14 @@ public class VocabularyServiceTests
 				Guid: Guid.NewGuid(),
 				Left: new Sentence("Hallo", [], true),
 				Right: new Sentence("Hello", [], false),
-				NewWords:[]),
+				NewWords:[],
+				IsNew:false),
 			new Vocable(
 				Guid: Guid.NewGuid(),
 				Left: new Sentence("Welt", [], true),
 				Right: new Sentence("World", [], false),
-				NewWords:[])
+				NewWords:[],
+				IsNew:false)
 		};
 
 		await service.SaveAsync(vocables);
@@ -85,12 +87,14 @@ public class VocabularyServiceTests
 				Guid: Guid.NewGuid(),
 				Left: new Sentence("Guten Tag", [], true),
 				Right: new Sentence("Good day", [], false),
-				NewWords:[]),
+				NewWords:[],
+				IsNew:false),
 			new Vocable(
 				Guid: Guid.NewGuid(),
 				Left: new Sentence("Auf Wiedersehen", [], true),
 				Right: new Sentence("Goodbye", [], false),
-				NewWords:[])
+				NewWords:[],
+				IsNew : false)
 		};
 
 		await service.SaveAsync(originalVocables);
@@ -118,7 +122,8 @@ public class VocabularyServiceTests
 				Guid: Guid.NewGuid(),
 				Left: new Sentence("das Haus", [], true),
 				Right: new Sentence("the house", [], false),
-				NewWords:[])
+				NewWords:[],
+				IsNew:false)
 		};
 
 		await service.SaveAsync(vocables);
@@ -145,22 +150,26 @@ public class VocabularyServiceTests
 				Guid: Guid.NewGuid(),
 				Left: new Sentence("Ich lerne Deutsch", [], true),
 				Right: new Sentence("I learn German", [], false),
-				NewWords:[]),
+				NewWords:[],
+				IsNew:false),
 			new Vocable(
 				Guid: Guid.NewGuid(),
 				Left: new Sentence("Du sprichst Englisch", [], true),
 				Right: new Sentence("You speak English", [], false),
-				NewWords:[]),
+				NewWords:[],
+				IsNew:false),
 			new Vocable(
 				Guid: Guid.NewGuid(),
 				Left: new Sentence("Er hat ein Auto", [], true),
 				Right: new Sentence("He has a car", [], false),
-				NewWords:[]),
+				NewWords:[],
+				IsNew:false),
 			new Vocable(
 				Guid: Guid.NewGuid(),
 				Left: new Sentence("car", [], false),
 				Right: new Sentence("Auto", [], true),
-				NewWords:[]),
+				NewWords:[],
+				IsNew:false),
 		};
 
 		await service.SaveAsync(vocables);

@@ -138,13 +138,14 @@ namespace Vocabulator.OpenAi
 
             var requestBody = new
             {
-                model = "gpt-5-mini",
-                stream = false,
-                messages = new[]
-                {
-                    new { role = "user", content = inputText }
-                }
-
+	            model = "gpt-5-mini",
+	            stream = false,                 // oder true, siehe unten
+	            reasoning_effort = "minimal",   // "minimal" | "low" | "medium" | "high"
+	            verbosity = "low",              // optional: "low" | "medium" | "high"
+	            messages = new[]
+	            {
+		            new { role = "user", content = inputText }
+	            }
             };
 
             var content = new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json");

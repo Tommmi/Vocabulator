@@ -43,7 +43,16 @@ namespace Vocabulator
 				}
 			}
 
-            return true;
+			if(options.WordFilePath != null)
+			{
+				if (options.IsWordInMotherLanguage == null)
+				{
+					Console.WriteLine($"if 'wordFilePath' is used, you must set parameter 'isWordInMotherLanguage'");
+					return false;
+				}
+			}
+
+			return true;
         }
 
         private static async Task Process(Options options, Config config)
@@ -82,6 +91,7 @@ namespace Vocabulator
 		            new (HeaderName:"Translation", ColumnType:typeof(string)),
 		            new (HeaderName:"KeyIsMotherLanguage", ColumnType:typeof(bool)),
 		            new (HeaderName:"New Words", ColumnType:typeof(string)),
+		            new (HeaderName:"Is New", ColumnType:typeof(string)),
 				},
 	            csvRepo: csvRepo);
 
@@ -181,6 +191,11 @@ namespace Vocabulator
 
         private static bool IsFileLocked(string path)
         {
+			if(!File.Exists(path))
+			{
+				return false;
+			}
+
 	        try
 	        {
 		        using var stream = new FileStream(
@@ -215,16 +230,19 @@ namespace Vocabulator
 			        Console.WriteLine($"{row.Example} - {row.TranslatedExample}");
 		        }
 
-		        foreach (var row in answer.Rows!)
+		        foreach (var row in answer.Rows!.GroupBy(r=>r.Translation))
 		        {
 			        var newVocable = vocabularyService.CreateVocable(
-				        leftSentence: $"{row.Word}\n[{row.Context!}]",
-				        rightSentence: $"{row.Translation!}\n[{row.AlternativeTranslation}]",
-				        isLeftMotherLanguage: isWordInMotherLanguage);
+				        leftSentence: $"{row.First().Word}\n[{string.Join('|',row.Select(v=>v.Context??""))}]",
+				        rightSentence: $"{row.Key}\n[{string.Join('|', row.SelectMany(v => v.AlternativeTranslations ?? []))}]",
+						isLeftMotherLanguage: isWordInMotherLanguage);
 
 			        loadedVocabulary.Add(newVocable);
+		        }
 
-			        newVocable = vocabularyService.CreateVocable(
+				foreach (var row in answer.Rows!)
+		        {
+			        var newVocable = vocabularyService.CreateVocable(
 				        leftSentence: row.Example!,
 				        rightSentence: row.TranslatedExample!,
 				        isLeftMotherLanguage: isWordInMotherLanguage);
