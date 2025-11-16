@@ -98,7 +98,7 @@ namespace Vocabulator.Domain.Services
 								v.Left.Content, 
 								v.Right.Content, 
 								v.Left.IsMotherLanguage, 
-								string.Join('|',v.NewWords.Select(w=>w.Token)),
+								string.Join(" | ",v.NewWords.Select(w=>w.Token)),
 								v.IsNew ? "X" : ""
 							]))
 						.ToList()

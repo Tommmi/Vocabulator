@@ -1,5 +1,7 @@
-﻿using CommandLine;
+﻿using System.Reflection;
+using CommandLine;
 using Microsoft.Extensions.Configuration;
+using Vocabulator.Apps;
 using Vocabulator.Common;
 using Vocabulator.Common.Csv;
 using Vocabulator.Domain.Interface;
@@ -28,7 +30,34 @@ namespace Vocabulator
                 });
         }
 
-        private static bool ValidateOptions(Options options)
+		private static SemaphoreSlim _syncLock = new SemaphoreSlim(1, 1);
+
+		private static async Task<T> DoSynchronized<T>(Func<Task<T>> action)
+		{
+			await _syncLock.WaitAsync();
+			try
+			{
+				return await action();
+			}
+			finally
+			{
+				_syncLock.Release();
+			}
+		}
+		private static async Task DoSynchronized(Func<Task> action)
+		{
+			await _syncLock.WaitAsync();
+			try
+			{
+				await action();
+			}
+			finally
+			{
+				_syncLock.Release();
+			}
+		}
+
+		private static bool ValidateOptions(Options options)
         {
 	        if(options.Words != null)
 	        {
@@ -77,61 +106,33 @@ namespace Vocabulator
             }
 
 
-			var openAiFactory = new AiEngineFactory(openApiKey: config.ApiKey);
             if(options.QuestionFilePath == null)
             {
                 throw new ApplicationException("missing config for QuestionFilePath");
             }
 
-            IVocabularyService vocabularyService = new VocabularyService(
-	            filepath: csvFilePath,
-	            columnDescriptions: new List<CsvColumnDescription>
-	            {
-		            new (HeaderName:"ID", ColumnType:typeof(Guid)),
-		            new (HeaderName:"Key", ColumnType:typeof(string)),
-		            new (HeaderName:"Translation", ColumnType:typeof(string)),
-		            new (HeaderName:"KeyIsMotherLanguage", ColumnType:typeof(bool)),
-		            new (HeaderName:"New Words", ColumnType:typeof(string)),
-		            new (HeaderName:"Is New", ColumnType:typeof(string)),
-				},
-	            csvRepo: csvRepo);
+            var vocabularyService = CreateVocabularyService(csvFilePath, csvRepo);
 
-            var loadedVocabulary = await vocabularyService.TryLoadAsync();
-            if (loadedVocabulary == null)
-            {
-	            loadedVocabulary = new List<Vocable>();
-            }
+            var loadedVocabulary = await LoadVocabularyAsync(vocabularyService);
 
             if(words.Any())
             {
-	            if (!TryGetProcessor(options, openAiFactory, isWordInMotherLanguage, out var processor))
+	            if (!TryGetProcessor(options, config, isWordInMotherLanguage, out var processor))
 	            {
 		            return;
 	            }
 
 				await DoInteruptable(action: async cancellationToken =>
 				{
-					foreach (var word in words.ToList())
-					{
-						if (cancellationToken.IsCancellationRequested)
-						{
-							break;
-						}
-
-						if(IsWordAllreadyUsed(word, loadedVocabulary))
-						{
-							words = RemoveWord(options, words, word);
-							continue;
-						}
-
-						var result = await TryAddWord(word, isWordInMotherLanguage, processor!, vocabularyService, sortService, loadedVocabulary);
-
-						if (result.succeeded)
-						{
-							loadedVocabulary = result.loadedVocabulary;
-							words = RemoveWord(options, words, word);
-						}
-					}
+					await ProcessAllNewWords(
+						options: options, 
+						words: words, 
+						cancellationToken: cancellationToken, 
+						isWordInMotherLanguage: isWordInMotherLanguage, 
+						processor: processor, 
+						vocabularyService: vocabularyService, 
+						sortService: sortService, 
+						loadedVocabulary: loadedVocabulary);
 				});
 
 			}
@@ -142,7 +143,109 @@ namespace Vocabulator
 			}
 		}
 
-        private static bool IsWordAllreadyUsed(string word, List<Vocable> loadedVocabulary)
+        private static async Task<List<Vocable>> LoadVocabularyAsync(IVocabularyService vocabularyService)
+        {
+	        var loadedVocabulary = await vocabularyService.TryLoadAsync();
+	        if (loadedVocabulary == null)
+	        {
+		        loadedVocabulary = new List<Vocable>();
+	        }
+
+	        return loadedVocabulary;
+        }
+
+        private static IVocabularyService CreateVocabularyService(string csvFilePath, CsvRepo csvRepo)
+        {
+	        IVocabularyService vocabularyService = new VocabularyService(
+		        filepath: csvFilePath,
+		        columnDescriptions: new List<CsvColumnDescription>
+		        {
+			        new (HeaderName:"ID", ColumnType:typeof(Guid)),
+			        new (HeaderName:"Key", ColumnType:typeof(string)),
+			        new (HeaderName:"Translation", ColumnType:typeof(string)),
+			        new (HeaderName:"KeyIsMotherLanguage", ColumnType:typeof(bool)),
+			        new (HeaderName:"New Words", ColumnType:typeof(string)),
+			        new (HeaderName:"Is New", ColumnType:typeof(string)),
+		        },
+		        csvRepo: csvRepo);
+	        return vocabularyService;
+        }
+
+        private static async Task ProcessAllNewWords(Options options, List<string> words, CancellationToken cancellationToken,
+	        bool isWordInMotherLanguage, IProcessorBase? processor, IVocabularyService vocabularyService,
+	        VocabularySortService sortService, List<Vocable>? loadedVocabulary)
+        {
+	        int cntWords = words.Count;
+	        var copiedWords = words.ToList();
+	        int bulkSize = 10;
+
+	        for (int i=0; i< cntWords; i += bulkSize)
+	        {
+		        if (cancellationToken.IsCancellationRequested)
+		        {
+			        break;
+		        }
+
+		        var processingWords = copiedWords.Skip(i).Take(bulkSize);
+		        var tasks = new List<Task>();
+
+		        foreach (var word in processingWords)
+		        {
+			        tasks.Add(HandleWordAsync(
+				        options: options, 
+				        word: word, 
+				        words: words, 
+				        isWordInMotherLanguage: isWordInMotherLanguage, 
+				        processor: processor, 
+				        vocabularyService: vocabularyService, 
+				        sortService: sortService, 
+				        targetVocabulary: loadedVocabulary));
+		        }
+
+		        await Task.WhenAll(tasks);
+	        }
+        }
+
+        private static async Task HandleWordAsync(
+	        Options options, 
+	        string word,
+	        // mutable
+	        List<string> words, 
+	        bool isWordInMotherLanguage,
+	        IProcessorBase? processor, 
+	        IVocabularyService vocabularyService, 
+	        VocabularySortService sortService,
+	        // mutable
+	        List<Vocable> targetVocabulary)
+        {
+	        await DoSynchronized(action: async () =>
+	        {
+		        if (IsWordAlreadyUsed(word, targetVocabulary))
+		        {
+			        RemoveWord(options, words, word);
+		        }
+	        });
+
+	        var result = await TryAddWordToVocabulary(
+		        word: word, 
+		        isWordInMotherLanguage: isWordInMotherLanguage, 
+		        processor: processor!, 
+		        vocabularyService: vocabularyService, 
+		        sortService: sortService, 
+		        targetVocabulary: targetVocabulary, 
+		        shouldSort: false);
+
+	        await DoSynchronized(action: async () =>
+	        {
+		        if (result.succeeded)
+		        {
+			        targetVocabulary = result.loadedVocabulary;
+			        RemoveWord(options, words, word);
+		        }
+	        });
+        }
+
+        private static bool IsWordAlreadyUsed(string word, List<Vocable> loadedVocabulary)
         {
 			word = word.ToLower();
 			foreach(var vocable in loadedVocabulary)
@@ -157,13 +260,10 @@ namespace Vocabulator
 			return false;
         }
 
-        private static string[] RemoveWord(Options options, string[] words, string word)
+        private static void RemoveWord(Options options, List<string> words, string word)
         {
-	        var wordList = words.ToList();
-	        wordList.Remove(word);
-	        words = wordList.ToArray();
+	        words.Remove(word);
 	        SaveWords(options, words);
-	        return words;
         }
 
 
@@ -194,12 +294,12 @@ namespace Vocabulator
 		}
 
 
-		private static bool TryGetWords(Options options, out string[] words)
+		private static bool TryGetWords(Options options, out List<string> words)
         {
-			words = [];
+			words = new List<string>();
 			if (options.Words != null)
 			{
-				words = options.Words.Split([';','|'],StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+				words = options.Words.Split([';','|'],StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToList();
 			}
 			else if(options.WordFilePath != null)
 			{
@@ -219,13 +319,13 @@ namespace Vocabulator
 
 				fileContent = File.ReadAllText(options.WordFilePath);
 
-				words = fileContent.Split(['\n', '\r'], StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+				words = fileContent.Split(['\n', '\r'], StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToList();
 			}
 
 			return true;
         }
 
-		private static void SaveWords(Options options, string[] words)
+		private static void SaveWords(Options options, List<string> words)
 		{
 			if (options.WordFilePath != null)
 			{
@@ -235,55 +335,31 @@ namespace Vocabulator
 
 
         private static bool TryGetProcessor(
-	        Options options, 
-	        AiEngineFactory openAiFactory, 
-	        bool isWordInMotherLanguage,
+	        Options options,
+	        Config config,
+			bool isWordInMotherLanguage,
 	        out IProcessorBase? processor)
         {
-	        var processorEnglishGerman4Germans = new Processor4EnglishGerman4Germans(openAiFactory, questionFilePath: options.QuestionFilePath!);
-	        var processorGermanEnglish4Germans = new Processor4GermanEnglish4Germans(openAiFactory, questionFilePath: options.QuestionFilePath!);
-	        var processorEnglishGerman4English = new Processor4EnglishGerman4English(openAiFactory, questionFilePath: options.QuestionFilePath!);
-	        var processorGermanEnglish4English = new Processor4GermanEnglish4English(openAiFactory, questionFilePath: options.QuestionFilePath!);
+	        var openAiFactory = new AiEngineFactory(openApiKey: config.ApiKey);
 
-			switch (options.MyLanguage)
-	        {
-		        case "German":
-			        switch(options.ForeignLanguage)
-			        {
-				        case "English":
-					        processor = isWordInMotherLanguage ? processorGermanEnglish4Germans : processorEnglishGerman4Germans;
-					        break;
-				        case "Brazilian":
-					        throw new ArgumentException();
-				        default:
-					        Console.WriteLine($"foreign language {options.ForeignLanguage} is not supported!");
-					        processor = null;
-					        return false;
-			        }
-			        break;
-		        case "English":
-			        switch (options.ForeignLanguage)
-			        {
-				        case "German":
-					        processor = isWordInMotherLanguage ? processorEnglishGerman4English : processorGermanEnglish4English;
-							break;
-				        case "Brazilian":
-					        throw new ArgumentException();
-				        default:
-					        Console.WriteLine($"foreign language {options.ForeignLanguage} is not supported!");
-					        processor = null;
-					        return false;
-			        }
-			        break;
-		        case "Brazilian":
-			        throw new ArgumentException();
-		        default:
-			        Console.WriteLine($"mother language {options.MyLanguage} is not supported!");
-			        processor = null;
-			        return false;
-	        }
+			var appDefinitions = new IAppLanguageDefinition[]
+			{
+				new AppEnglish4Germans(openAiFactory, options.QuestionFilePath!),
+				new AppGerman4English(openAiFactory, options.QuestionFilePath!),
+			};
 
-	        return true;
+			var appDefinition = appDefinitions.FirstOrDefault(a => a.Handles(motherLanguage: options.MyLanguage!, foreignLanguage: options.ForeignLanguage!));
+
+			if(appDefinition == null)
+			{
+				Console.WriteLine($"mother language {options.MyLanguage} with foreign language {options.ForeignLanguage} is not supported!");
+				processor = null;
+				return false;
+			}
+
+			processor = appDefinition.TryGetProcessor(isWordInMotherLanguage: isWordInMotherLanguage);
+
+	        return processor != null;
         }
 
         private static bool IsFileLocked(string path)
@@ -311,50 +387,58 @@ namespace Vocabulator
 
 
 
-		private static async Task<(bool succeeded, List<Vocable> loadedVocabulary)> TryAddWord(
+		private static async Task<(bool succeeded, List<Vocable> loadedVocabulary)> TryAddWordToVocabulary(
 	        string word, 
             bool isWordInMotherLanguage,
 	        IProcessorBase processor, 
 	        IVocabularyService vocabularyService,
 	        VocabularySortService sortService, 
-	        List<Vocable> loadedVocabulary)
+	        List<Vocable> targetVocabulary,
+	        bool shouldSort)
         {
 	        var answer = await processor.LoadAnswer(word: word);
 	        if (answer != null)
 	        {
-		        foreach (var row in answer.Rows ?? [])
-		        {
-			        Console.WriteLine($"{row.Example} - {row.TranslatedExample}");
-		        }
+				return await DoSynchronized(action: async () =>
+				{
+					foreach (var row in answer.Rows ?? [])
+					{
+						Console.WriteLine($"{row.Example} - {row.TranslatedExample}");
+					}
 
-		        foreach (var row in answer.Rows!.GroupBy(r=>r.Translation))
-		        {
-			        var newVocable = vocabularyService.CreateVocable(
-				        leftSentence: $"{row.First().Word}\n[{string.Join('|',row.Select(v=>v.Context??""))}]",
-				        rightSentence: $"{row.Key}\n[{string.Join('|', row.SelectMany(v => v.AlternativeTranslations ?? []))}]",
-						isLeftMotherLanguage: isWordInMotherLanguage);
+					foreach (var row in answer.Rows!.GroupBy(r => r.Translation))
+					{
+						var newVocable = vocabularyService.CreateVocable(
+							leftSentence: $"{row.First().Word}\n[{string.Join(" | ", row.Select(v => v.Context ?? ""))}]",
+							rightSentence: $"{row.Key}\n[{string.Join(" | ", row.SelectMany(v => v.AlternativeTranslations ?? []))}]",
+							isLeftMotherLanguage: isWordInMotherLanguage);
 
-			        loadedVocabulary.Add(newVocable);
-		        }
+						targetVocabulary.Add(newVocable);
+					}
 
-				foreach (var row in answer.Rows!)
-		        {
-			        var newVocable = vocabularyService.CreateVocable(
-				        leftSentence: row.Example!,
-				        rightSentence: row.TranslatedExample!,
-				        isLeftMotherLanguage: isWordInMotherLanguage);
+					foreach (var row in answer.Rows!)
+					{
+						var newVocable = vocabularyService.CreateVocable(
+							leftSentence: row.Example!,
+							rightSentence: row.TranslatedExample!,
+							isLeftMotherLanguage: isWordInMotherLanguage);
 
-			        loadedVocabulary.Add(newVocable);
-		        }
+						targetVocabulary.Add(newVocable);
+					}
 
-				loadedVocabulary = sortService.Sort(loadedVocabulary);
-		        await vocabularyService.SaveAsync(loadedVocabulary);
-		        return (succeeded: true, loadedVocabulary);
+					if (shouldSort)
+					{
+						targetVocabulary = sortService.Sort(targetVocabulary);
+					}
+
+					await vocabularyService.SaveAsync(targetVocabulary);
+					return (succeeded: true, loadedVocabulary: targetVocabulary);
+				});
 	        }
 			else
 	        {
 		        Console.WriteLine($"can't find answer {word}");
-		        return (succeeded: false, loadedVocabulary);
+		        return (succeeded: false, targetVocabulary);
 	        }
 		}
 
