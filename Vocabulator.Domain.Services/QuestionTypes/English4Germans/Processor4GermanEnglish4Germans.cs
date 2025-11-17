@@ -1,4 +1,7 @@
 ﻿using Vocabulator.Common;
+using Vocabulator.Common.AnswerTypes;
+using Vocabulator.Domain.Interface;
+using Vocabulator.Domain.Services.AnswerTypes;
 
 namespace Vocabulator.Domain.Services.QuestionTypes.English4Germans
 {
@@ -29,10 +32,15 @@ namespace Vocabulator.Domain.Services.QuestionTypes.English4Germans
         {
         }
 
-        public override async Task<WordAnswer?> LoadAnswer(string word)
+        public override async Task<IResponseContext?> LoadAnswer(string word)
         {
             var question = new QuestionType(_aiProcessor.QuestionTemplate, word);
-            return await _aiProcessor.DoRequest(question);
+            var answer = await _aiProcessor.DoRequest(question);
+            if (answer == null)
+            {
+	            return null;
+            }
+            return new ResponseContextWordAnswer(answer, isWordInMotherLanguage:true);
         }
-    }
+	}
 }

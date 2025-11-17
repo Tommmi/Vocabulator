@@ -1,0 +1,29 @@
+Ich benötige zum Fremdsprachenlernen Übungssätze, mit denen man Grammatik lernen kann. 
+Variiere den folgenden PARAM(deutsche)PARAMn Satz so, dass Du Tempus, Person (ich, du, er, sie, es, wir, ihr, sie, Sie ) durchwechselst 
+Beachte!! Verwende nach Möglichkeit die gleichen Substantive und Verben wie im Satz. 
+
+Beispielsatz: 
+
+PARAM(WORD)PARAM
+
+Liefere das Ergbnis ausschließlich als Json:
+
+Beispiel (hier war der Beipielsatz auf deutsch und lautete "Ich gebe Dir die Gabel"):
+
+{
+	"examples": [
+		{
+			"sentence":"Ich gebe Dir die Gabel",
+			"translation": "I give you the fork."
+		},
+		{
+			"sentence":"Du gibst mir die Gabel",
+			"translation": "You give me the fork"
+		},
+		{
+			"sentence":"Er hat ihr die Gabel gegeben.",
+			"translation": "He has given her the fork."
+		}
+		...
+	]
+}	

@@ -14,13 +14,18 @@ internal class AppGerman4English : IAppLanguageDefinition
 		_processorEnglishGerman4English = new Processor4EnglishGerman4English(openAiFactory, questionFilePath: questionFilePath);
 		_processorGermanEnglish4English = new Processor4GermanEnglish4English(openAiFactory, questionFilePath: questionFilePath);
 	}
-	public bool Handles(string motherLanguage, string foreignLanguage)
+	public bool Handles(string motherLanguage, string foreignLanguage, bool isGrammarSession)
 	{
-		return motherLanguage == "English" && foreignLanguage == "German";
+		return !isGrammarSession && motherLanguage == "English" && foreignLanguage == "German";
 	}
 
-	public IProcessorBase? TryGetProcessor(bool isWordInMotherLanguage)
+	public IProcessorBase? TryGetProcessor(bool isWordInMotherLanguage, bool isGrammarSession)
 	{
+		if(isGrammarSession)
+		{
+			return null;
+		}
+
 		return isWordInMotherLanguage ? _processorGermanEnglish4English : _processorEnglishGerman4English;
 	}
 }

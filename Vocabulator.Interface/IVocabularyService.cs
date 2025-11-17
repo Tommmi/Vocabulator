@@ -6,6 +6,5 @@ namespace Vocabulator.Domain.Interface
 	{
 		Task<List<Vocable>?> TryLoadAsync();
 		Task SaveAsync(List<Vocable> vocables);
-		Vocable CreateVocable(string leftSentence, string rightSentence, bool isLeftMotherLanguage);
 	}
 }

@@ -4,5 +4,11 @@ namespace Vocabulator.Domain.Interface;
 
 public interface IProcessorBase
 {
-	Task<WordAnswer?> LoadAnswer(string word);
+	Task<IResponseContext?> LoadAnswer(string word);
+}
+
+
+public interface IResponseContext
+{
+	List<Vocable> CreateVocables();
 }

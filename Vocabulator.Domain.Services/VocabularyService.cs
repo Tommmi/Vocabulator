@@ -68,7 +68,7 @@ namespace Vocabulator.Domain.Services
 				IsMotherLanguage: isColMotherLanguage);
 		}
 
-		public Vocable CreateVocable(string leftSentence, string rightSentence, bool isLeftMotherLanguage)
+		public static Vocable CreateVocable(string leftSentence, string rightSentence, bool isLeftMotherLanguage)
 		{
 			return new Vocable(
 				Guid: Guid.NewGuid(),
@@ -78,7 +78,7 @@ namespace Vocabulator.Domain.Services
 				IsNew:true);
 		}
 
-		private Sentence CreateSentence(string sentence, bool isMotherLanguage)
+		private static Sentence CreateSentence(string sentence, bool isMotherLanguage)
 		{
 			return new Sentence(
 				Content: sentence,
@@ -110,7 +110,7 @@ namespace Vocabulator.Domain.Services
 
 		#region private
 
-		private Word[] ParseWords(object fieldTxt, bool isMotherLanguage)
+		private static Word[] ParseWords(object fieldTxt, bool isMotherLanguage)
 		{
 			string text = (string)fieldTxt;
 			if (!isMotherLanguage)

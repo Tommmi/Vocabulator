@@ -1,14 +1,12 @@
-﻿using System.Reflection;
-using CommandLine;
+﻿using CommandLine;
 using Microsoft.Extensions.Configuration;
 using Vocabulator.Apps;
 using Vocabulator.Common;
 using Vocabulator.Common.Csv;
 using Vocabulator.Domain.Interface;
 using Vocabulator.Domain.Services;
-using Vocabulator.Domain.Services.QuestionTypes.English4Germans;
-using Vocabulator.Domain.Services.QuestionTypes.Germans4English;
 using Vocabulator.Infrastructure;
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 
 namespace Vocabulator
 {
@@ -89,7 +87,7 @@ namespace Vocabulator
         {
             bool isWordInMotherLanguage = options.IsWordInMotherLanguage ?? false;
 
-			if(!TryGetWords(options, out var words))
+			if (!TryGetWords(options, out var words))
 			{
 				return;
 			}
@@ -105,11 +103,6 @@ namespace Vocabulator
                 return;
             }
 
-
-            if(options.QuestionFilePath == null)
-            {
-                throw new ApplicationException("missing config for QuestionFilePath");
-            }
 
             var vocabularyService = CreateVocabularyService(csvFilePath, csvRepo);
 
@@ -128,7 +121,6 @@ namespace Vocabulator
 						options: options, 
 						words: words, 
 						cancellationToken: cancellationToken, 
-						isWordInMotherLanguage: isWordInMotherLanguage, 
 						processor: processor, 
 						vocabularyService: vocabularyService, 
 						sortService: sortService, 
@@ -171,9 +163,14 @@ namespace Vocabulator
 	        return vocabularyService;
         }
 
-        private static async Task ProcessAllNewWords(Options options, List<string> words, CancellationToken cancellationToken,
-	        bool isWordInMotherLanguage, IProcessorBase? processor, IVocabularyService vocabularyService,
-	        VocabularySortService sortService, List<Vocable>? loadedVocabulary)
+        private static async Task ProcessAllNewWords(
+	        Options options, 
+	        List<string> words, 
+	        CancellationToken cancellationToken,
+	        IProcessorBase? processor, 
+	        IVocabularyService vocabularyService,
+	        VocabularySortService sortService, 
+	        List<Vocable> loadedVocabulary)
         {
 	        int cntWords = words.Count;
 	        var copiedWords = words.ToList();
@@ -195,7 +192,6 @@ namespace Vocabulator
 				        options: options, 
 				        word: word, 
 				        words: words, 
-				        isWordInMotherLanguage: isWordInMotherLanguage, 
 				        processor: processor, 
 				        vocabularyService: vocabularyService, 
 				        sortService: sortService, 
@@ -211,7 +207,6 @@ namespace Vocabulator
 	        string word,
 	        // mutable
 	        List<string> words, 
-	        bool isWordInMotherLanguage,
 	        IProcessorBase? processor, 
 	        IVocabularyService vocabularyService, 
 	        VocabularySortService sortService,
@@ -228,7 +223,6 @@ namespace Vocabulator
 
 	        var result = await TryAddWordToVocabulary(
 		        word: word, 
-		        isWordInMotherLanguage: isWordInMotherLanguage, 
 		        processor: processor!, 
 		        vocabularyService: vocabularyService, 
 		        sortService: sortService, 
@@ -340,16 +334,20 @@ namespace Vocabulator
 			bool isWordInMotherLanguage,
 	        out IProcessorBase? processor)
         {
-	        var openAiFactory = new AiEngineFactory(openApiKey: config.ApiKey);
+	        bool isGrammarSession =  options.IsGrammarTask ?? false;
+
+
+			var openAiFactory = new AiEngineFactory(openApiKey: config.ApiKey);
 
 			var appDefinitions = new IAppLanguageDefinition[]
 			{
-				new AppEnglish4Germans(openAiFactory, options.QuestionFilePath!),
-				new AppGerman4English(openAiFactory, options.QuestionFilePath!),
+				new AppEnglish4Germans(openAiFactory, ".\\question.txt", questionGrammarFilePath:".\\questionGrammar.txt" ),
+				new AppGerman4English(openAiFactory, ".\\question.txt"),
 			};
 
-			var appDefinition = appDefinitions.FirstOrDefault(a => a.Handles(motherLanguage: options.MyLanguage!, foreignLanguage: options.ForeignLanguage!));
-
+			var appDefinition = appDefinitions.FirstOrDefault(a => a.Handles(motherLanguage: options.MyLanguage!, 
+																			 foreignLanguage: options.ForeignLanguage!,
+																			 isGrammarSession: isGrammarSession));
 			if(appDefinition == null)
 			{
 				Console.WriteLine($"mother language {options.MyLanguage} with foreign language {options.ForeignLanguage} is not supported!");
@@ -357,7 +355,7 @@ namespace Vocabulator
 				return false;
 			}
 
-			processor = appDefinition.TryGetProcessor(isWordInMotherLanguage: isWordInMotherLanguage);
+			processor = appDefinition.TryGetProcessor(isWordInMotherLanguage: isWordInMotherLanguage, isGrammarSession: isGrammarSession);
 
 	        return processor != null;
         }
@@ -385,11 +383,8 @@ namespace Vocabulator
 	        }
         }
 
-
-
 		private static async Task<(bool succeeded, List<Vocable> loadedVocabulary)> TryAddWordToVocabulary(
 	        string word, 
-            bool isWordInMotherLanguage,
 	        IProcessorBase processor, 
 	        IVocabularyService vocabularyService,
 	        VocabularySortService sortService, 
@@ -397,34 +392,14 @@ namespace Vocabulator
 	        bool shouldSort)
         {
 	        var answer = await processor.LoadAnswer(word: word);
+
 	        if (answer != null)
 	        {
+		        var newVocables = answer.CreateVocables();
+
 				return await DoSynchronized(action: async () =>
 				{
-					foreach (var row in answer.Rows ?? [])
-					{
-						Console.WriteLine($"{row.Example} - {row.TranslatedExample}");
-					}
-
-					foreach (var row in answer.Rows!.GroupBy(r => r.Translation))
-					{
-						var newVocable = vocabularyService.CreateVocable(
-							leftSentence: $"{row.First().Word}\n[{string.Join(" | ", row.Select(v => v.Context ?? ""))}]",
-							rightSentence: $"{row.Key}\n[{string.Join(" | ", row.SelectMany(v => v.AlternativeTranslations ?? []))}]",
-							isLeftMotherLanguage: isWordInMotherLanguage);
-
-						targetVocabulary.Add(newVocable);
-					}
-
-					foreach (var row in answer.Rows!)
-					{
-						var newVocable = vocabularyService.CreateVocable(
-							leftSentence: row.Example!,
-							rightSentence: row.TranslatedExample!,
-							isLeftMotherLanguage: isWordInMotherLanguage);
-
-						targetVocabulary.Add(newVocable);
-					}
+					targetVocabulary.AddRange(newVocables);
 
 					if (shouldSort)
 					{
@@ -437,7 +412,7 @@ namespace Vocabulator
 	        }
 			else
 	        {
-		        Console.WriteLine($"can't find answer {word}");
+		        Console.WriteLine($"can't find answer for {word}");
 		        return (succeeded: false, targetVocabulary);
 	        }
 		}

@@ -54,10 +54,11 @@ public abstract class ProcessorBase<TResponse,TQuestionType> : IProcessorBase wh
         throw new ApplicationException("tag9862654");
     }
 
-    public abstract Task<WordAnswer?> LoadAnswer(string word);
+    public abstract Task<IResponseContext?> LoadAnswer(string word);
 
 	protected static string Serialize<T>(T obj)
     {
         return JsonSerializer.Serialize(obj);
     }
 }
+
