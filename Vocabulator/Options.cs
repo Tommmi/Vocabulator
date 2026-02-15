@@ -19,4 +19,9 @@ internal class Options
 	[Option('g', "isGrammar", Required = false, HelpText = "true, if is grammar task")]
 	public bool? IsGrammarTask { get; set; }
 
+	[Option('t', "isTranslation", Required = false, HelpText = "true, if is pure translation task")]
+	public bool? IsTranslationTask { get; set; }
+
+	
+
 }

@@ -272,17 +272,7 @@ public class CsvRepo : ICsvRepo
 		if (value is double d) return d.ToString(CultureInfo.InvariantCulture);
 		if (value is int i) return i.ToString(CultureInfo.InvariantCulture);
 		if (value is Guid g) return g.ToString();
-		return EscapeString(value as string);
-	}
-
-	private static string EscapeString(string? value)
-	{
-		if(value == null)
-		{
-			return "";
-		}
-
-		return value.Replace("\"", "\"\"");
+		return value?.ToString()??"";
 	}
 
 	private static string QuoteIfNeeded(string? value)

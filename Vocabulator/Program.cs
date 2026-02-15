@@ -335,27 +335,32 @@ namespace Vocabulator
 	        out IProcessorBase? processor)
         {
 	        bool isGrammarSession =  options.IsGrammarTask ?? false;
-
+			bool isTranslationSession = options.IsTranslationTask ?? false;
 
 			var openAiFactory = new AiEngineFactory(openApiKey: config.ApiKey);
 
 			var appDefinitions = new IAppLanguageDefinition[]
 			{
-				new AppEnglish4Germans(openAiFactory, ".\\question.txt", questionGrammarFilePath:".\\questionGrammar.txt" ),
-				new AppGerman4English(openAiFactory, ".\\question.txt"),
+				new AppEnglish4Germans(openAiFactory, ".\\question.txt", questionGrammarFilePath:".\\questionGrammar.txt",questionTranslationFilePath:".\\questionTranslation.txt" ),
+				new AppGerman4Brazilians(openAiFactory, ".\\question.txt", questionGrammarFilePath:".\\questionGrammar.txt" ),
+				new AppGerman4English(openAiFactory, ".\\question.txt",questionTranslationFilePath:".\\questionTranslation.txt" ),
 			};
 
 			var appDefinition = appDefinitions.FirstOrDefault(a => a.Handles(motherLanguage: options.MyLanguage!, 
 																			 foreignLanguage: options.ForeignLanguage!,
-																			 isGrammarSession: isGrammarSession));
+																			 isGrammarSession: isGrammarSession,
+																			 isTranslationSession: isTranslationSession));
 			if(appDefinition == null)
 			{
-				Console.WriteLine($"mother language {options.MyLanguage} with foreign language {options.ForeignLanguage} is not supported!");
+				Console.WriteLine($"mother language {options.MyLanguage} with foreign language {options.ForeignLanguage} and translation mode {isTranslationSession} and grammar mode {isGrammarSession} is not supported!");
 				processor = null;
 				return false;
 			}
 
-			processor = appDefinition.TryGetProcessor(isWordInMotherLanguage: isWordInMotherLanguage, isGrammarSession: isGrammarSession);
+			processor = appDefinition.TryGetProcessor(
+				isWordInMotherLanguage: isWordInMotherLanguage, 
+				isGrammarSession: isGrammarSession,
+				isTranslationSession:isTranslationSession);
 
 	        return processor != null;
         }

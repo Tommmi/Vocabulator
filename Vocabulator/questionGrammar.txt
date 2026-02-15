@@ -6,9 +6,11 @@ Beispielsatz:
 
 PARAM(WORD)PARAM
 
-Liefere das Ergbnis ausschließlich als Json:
+Liefere das Ergbnis ausschließlich als Json.
+Übersetze dabei die PARAM(deutsche)PARAMn Sätze ins PARAM(englische)PARAM.
 
-Beispiel (hier war der Beipielsatz auf deutsch und lautete "Ich gebe Dir die Gabel"):
+
+Json-Beispiel (in diesem Json-Beispiel war der Beipielsatz auf deutsch und die Übersetzungssprache war Englisch. Der Übungssatz in diesem Json lautete "Ich gebe Dir die Gabel"):
 
 {
 	"examples": [

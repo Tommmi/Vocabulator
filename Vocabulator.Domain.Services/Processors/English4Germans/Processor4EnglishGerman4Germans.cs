@@ -3,9 +3,9 @@ using Vocabulator.Common.AnswerTypes;
 using Vocabulator.Domain.Interface;
 using Vocabulator.Domain.Services.AnswerTypes;
 
-namespace Vocabulator.Domain.Services.QuestionTypes.English4Germans
+namespace Vocabulator.Domain.Services.Processors.English4Germans
 {
-    public class Processor4GermanEnglish4Germans : ProcessorBase<WordAnswer, Processor4GermanEnglish4Germans.QuestionType>
+    public class Processor4EnglishGerman4Germans : ProcessorBase<WordAnswer, Processor4EnglishGerman4Germans.QuestionType>
     {
         public class QuestionType : Question
         {
@@ -15,8 +15,8 @@ namespace Vocabulator.Domain.Services.QuestionTypes.English4Germans
                     parameters:
                     [
 	                    new("WORD", word),
-	                    new("deutsche", "deutsche"),
-	                    new("englische", "englische"),
+	                    new("deutsche", "englische"),
+	                    new("englische", "deutsche"),
 	                    new("Muttersprache", "deutsch")
 					])
             {
@@ -24,7 +24,7 @@ namespace Vocabulator.Domain.Services.QuestionTypes.English4Germans
             }
         }
 
-        public Processor4GermanEnglish4Germans(IAiEngineFactory aiEngineFactory, string questionFilePath) 
+        public Processor4EnglishGerman4Germans(IAiEngineFactory aiEngineFactory, string questionFilePath) 
             : base(
                 aiEngineFactory: aiEngineFactory, 
                 questionFilePath: questionFilePath,
@@ -40,7 +40,7 @@ namespace Vocabulator.Domain.Services.QuestionTypes.English4Germans
             {
 	            return null;
             }
-            return new ResponseContextWordAnswer(answer, isWordInMotherLanguage:true);
+            return new ResponseContextWordAnswer(answer, isWordInMotherLanguage:false);
         }
-	}
+    }
 }

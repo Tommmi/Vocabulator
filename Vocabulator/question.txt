@@ -34,7 +34,7 @@
 6. Gib eine Tabelle mit folgenden Spalten aus:
    a) PARAM(deutsche)PARAMr Begriff "PARAM(WORD)PARAM" 
    b) PARAM(englische)PARAM Übersetzung (Minimalform)  
-   c) verknüpfter Kontext/Bedeutung oder typische Situation (Kontext in PARAM(Muttersprache)PARAMr Sprache)  
+   c) verknüpfter Kontext/Bedeutung oder typische Situation (bitte in PARAM(Muttersprache)PARAMr Sprache !)  
    d) extrem kurzer PARAM(deutsche)PARAMr Beispielausdruck, der den PARAM(deutsche)PARAMn Begriff genau in der obigen Form enthält (zum Beispiel: wäre der Begriff "kreativ", wären Beipielausdrücke wie 
      "kreativ denken", "Sie ist sehr kreativ.", "kreativ arbeiten" erlaubt)  
    e) PARAM(englische)PARAM Übersetzung des Beispiels  

@@ -3,7 +3,7 @@ using Vocabulator.Common.AnswerTypes;
 using Vocabulator.Domain.Interface;
 using Vocabulator.Domain.Services.AnswerTypes;
 
-namespace Vocabulator.Domain.Services.QuestionTypes.English4Germans;
+namespace Vocabulator.Domain.Services.Processors.English4Germans;
 
 public class Processor4GermanEnglishGrammar4Germans : ProcessorBase<GrammarAnswer, Processor4GermanEnglishGrammar4Germans.QuestionType>
 {

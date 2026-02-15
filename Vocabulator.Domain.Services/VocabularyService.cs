@@ -128,7 +128,7 @@ namespace Vocabulator.Domain.Services
 			if (string.IsNullOrWhiteSpace(input))
 				return new List<string>();
 
-			input = Regex.Replace(input, @"\[.*?\]", string.Empty);
+			input = Regex.Replace(input, @"\[[\s\S]*?\]", string.Empty);
 
 			var matches = Regex.Matches(input, @"\p{L}+");
 

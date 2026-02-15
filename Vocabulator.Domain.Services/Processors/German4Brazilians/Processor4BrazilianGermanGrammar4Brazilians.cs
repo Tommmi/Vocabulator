@@ -3,9 +3,9 @@ using Vocabulator.Common.AnswerTypes;
 using Vocabulator.Domain.Interface;
 using Vocabulator.Domain.Services.AnswerTypes;
 
-namespace Vocabulator.Domain.Services.QuestionTypes.English4Germans;
+namespace Vocabulator.Domain.Services.Processors.German4Brazilians;
 
-public class Processor4EnglishGermanGrammar4Germans : ProcessorBase<GrammarAnswer, Processor4EnglishGermanGrammar4Germans.QuestionType>
+public class Processor4BrazilianGermanGrammar4Brazilians : ProcessorBase<GrammarAnswer, Processor4BrazilianGermanGrammar4Brazilians.QuestionType>
 {
 	public class QuestionType : Question
 	{
@@ -15,18 +15,19 @@ public class Processor4EnglishGermanGrammar4Germans : ProcessorBase<GrammarAnswe
 				parameters:
 				[
 					new("WORD", word),
-					new("deutsche", "englische")
+					new("deutsche", "brasilianische"),
+					new("englische", "deutsche"),
 				])
 		{
 
 		}
 	}
 
-	public Processor4EnglishGermanGrammar4Germans(IAiEngineFactory aiEngineFactory, string questionFilePath)
+	public Processor4BrazilianGermanGrammar4Brazilians(IAiEngineFactory aiEngineFactory, string questionFilePath)
 		: base(
 			aiEngineFactory: aiEngineFactory,
 			questionFilePath: questionFilePath,
-			className: nameof(Processor4EnglishGermanGrammar4Germans))
+			className: nameof(Processor4BrazilianGermanGrammar4Brazilians))
 	{
 	}
 
@@ -34,10 +35,10 @@ public class Processor4EnglishGermanGrammar4Germans : ProcessorBase<GrammarAnswe
 	{
 		var question = new QuestionType(_aiProcessor.QuestionTemplate, word);
 		var answer = await _aiProcessor.DoRequest(question);
-		if(answer == null)
+		if (answer == null)
 		{
 			return null;
 		}
-		return new ResponseContextGrammarAnswer(answer, isLeftInMotherLanguage:false);
+		return new ResponseContextGrammarAnswer(answer, isLeftInMotherLanguage:true);
 	}
 }

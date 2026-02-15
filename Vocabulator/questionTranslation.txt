@@ -1,0 +1,17 @@
+Übersetze bitte den folgenden PARAM(deutsche)PARAMn Text ins PARAM(englische)PARAM.
+Überlege Dir auch alternative Übersetzungen. Versuche dabei aber nicht zu kreativ zu sein. 
+Es sollte schon so klingen, wie normale Menschen es übersetzen würden.
+
+Text:
+PARAM(WORD)PARAM
+
+Gib bitte die Übersetzung in folgender Form aus:
+
+{
+	"translations": [
+		"translation 1",
+		"translation 2",
+		"translation 3"
+		]
+}
+		

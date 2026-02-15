@@ -10,6 +10,7 @@
   <ItemGroup>
     <None Remove="appsettings.json" />
     <None Remove="questionGrammar.txt" />
+    <None Remove="questionTranslation.txt" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,6 +22,9 @@
     </Content>
     <Content Include="questionGrammar.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="questionTranslation.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 

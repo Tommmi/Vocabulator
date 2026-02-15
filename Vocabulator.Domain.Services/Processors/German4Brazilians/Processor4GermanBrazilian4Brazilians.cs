@@ -3,9 +3,9 @@ using Vocabulator.Common.AnswerTypes;
 using Vocabulator.Domain.Interface;
 using Vocabulator.Domain.Services.AnswerTypes;
 
-namespace Vocabulator.Domain.Services.QuestionTypes.English4Germans
+namespace Vocabulator.Domain.Services.Processors.German4Brazilians
 {
-    public class Processor4EnglishGerman4Germans : ProcessorBase<WordAnswer, Processor4EnglishGerman4Germans.QuestionType>
+    public class Processor4GermanBrazilian4Brazilians : ProcessorBase<WordAnswer, Processor4GermanBrazilian4Brazilians.QuestionType>
     {
         public class QuestionType : Question
         {
@@ -15,20 +15,20 @@ namespace Vocabulator.Domain.Services.QuestionTypes.English4Germans
                     parameters:
                     [
 	                    new("WORD", word),
-	                    new("deutsche", "englische"),
-	                    new("englische", "deutsche"),
-	                    new("Muttersprache", "deutsch")
+	                    new("deutsche", "deutsche"),
+	                    new("englische", "brasilianische"),
+	                    new("Muttersprache", "brasilianisch")
 					])
             {
 
             }
         }
 
-        public Processor4EnglishGerman4Germans(IAiEngineFactory aiEngineFactory, string questionFilePath) 
+        public Processor4GermanBrazilian4Brazilians(IAiEngineFactory aiEngineFactory, string questionFilePath) 
             : base(
                 aiEngineFactory: aiEngineFactory, 
                 questionFilePath: questionFilePath,
-                className:nameof(Processor4GermanEnglish4Germans))
+                className:nameof(Processor4GermanBrazilian4Brazilians))
         {
         }
 
